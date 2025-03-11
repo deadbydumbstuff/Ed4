@@ -10,10 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 698779e8fb1829a4bbeea6cbcf76820f, type: 3}
-  m_Name: Terrain_Grass
+  m_Name: Terrain_Impassible
   m_EditorClassIdentifier: 
   tiles:
-  - {fileID: 11400000, guid: c58fcca18a602f84687e110b931e16b9, type: 2}
-  - {fileID: 11400000, guid: ea3f64d84fb3c2d4fb50814a44fda90c, type: 2}
-  - {fileID: 0}
-  type: 1
+  - {fileID: 11400000, guid: b3dee342900e0da4daf16e8cbc0b59c5, type: 2}
+  type: -1
