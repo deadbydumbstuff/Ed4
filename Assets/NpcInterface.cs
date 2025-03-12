@@ -4,7 +4,10 @@ using UnityEngine;
 public interface NpcInterface
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void DayStart();
+    void DayStart()
+    {
+        Debug.Log("Test");
+    }
 
     void EndDay();
 }
