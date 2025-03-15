@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Terrain_Difficult
   m_EditorClassIdentifier: 
   tiles:
-  - {fileID: 11400000, guid: cd5ad5aeae0423546898f8cfeba9cb05, type: 2}
+  - {fileID: 11400000, guid: c2559841824b8be4d855f0d948379395, type: 2}
   type: 5

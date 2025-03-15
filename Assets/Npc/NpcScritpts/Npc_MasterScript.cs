@@ -6,6 +6,8 @@ using UnityEngine.Tilemaps;
 
 public class Npc_MasterScript : MonoBehaviour,NpcInterface
 {
+    [SerializeField]private bool Debuging;
+    [SerializeField] GameObject DebugPoint;
     public class Npc
     {
         public string name; //Npc name duh
@@ -47,12 +49,28 @@ public class Npc_MasterScript : MonoBehaviour,NpcInterface
     void NpcInterface.EndDay() { }
     #endregion
 
+
+    //might need to make this a seperate script and only on one object as rn this would cause every npc to have their own dictionary
     void Awake() 
     {
         CreateDiction();
-        Debug.Log((int)TileVaule[TileBase].type);
+        //Debug.Log((int)TileVaule[TileBase].type);
 
+        //Debug.Log(GetTileVaule(new Vector2(0,0)));
     }
+
+    private void Update()
+    {
+        #region Debug /MouseDebug
+        if (Debuging && Input.GetMouseButton(0))
+        {
+            Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            
+            Debug.Log(GetTileVaule(mousePos));
+        }
+        #endregion
+    }
+
     /// <summary>
     /// creates a dictionary of every single type of tile used in the npc pathing algorthim and their tilemapdata so we can use the tiletype as the key and it will return its tiledata scritable oject 
     /// </summary>
@@ -77,9 +95,9 @@ public class Npc_MasterScript : MonoBehaviour,NpcInterface
     //vaules 
 
     //ASTAR METHOD 
-    //GVAULE
-    //FVAULE
-    //CURRENT VAULE 
+    //G Vaule   distance from start
+    //H vaule   distance from end node in directed pathing 
+    //F vaule   total of G+H vaule
     //get nabours if nabours have been checkd add them ot a haslish for quick checking of vaules 
     //get the start pos and the end pos and translate them into grid positions
     //get the start pos and check for the end pos 
@@ -104,9 +122,28 @@ public class Npc_MasterScript : MonoBehaviour,NpcInterface
     }*/
 
 
+    /// <summary>
+    /// create a path using the A* pathfinding 
+    /// </summary>
+    /// <param name="StartPos"></param> the postion the npc starts from
+    /// <param name="Goal"></param> the goal postion to creat the path from
     void GeneratePath(Vector2 StartPos,Vector2 Goal)
     {
-        
+        //int i = GetTileVaule(StartPos);
     }
+    /// <summary>
+    /// given a coordiant we check if that tile is on the tilemap and its vaule to step on
+    /// .public beacuse npc will use this to get the tile they stand on and change speed accordingly
+    /// .-1
+    /// </summary>
+    /// <param name="Postion"></param>
+    public int GetTileVaule(Vector2 Postion)
+    {
+        Vector3Int V3I = new Vector3Int((int)Mathf.Round(Postion.x),(int)Mathf.Round(Postion.y),0);
+        TileBase Tb = tilemap.GetTile(V3I);
+        return Tb ? (int)TileVaule[Tb].type : -1;
+    }
+
+
     #endregion
 }
