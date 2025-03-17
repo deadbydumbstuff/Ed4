@@ -3,8 +3,14 @@ using System.Collections.Generic;
 using Unity.VisualScripting.Antlr3.Runtime.Collections;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using System.Linq;
 
-public class Npc_MasterScript : MonoBehaviour
+public interface NpcPathFinding
+{
+    public enum Direction
+    { Left, Right, Up, Down, End }
+}
+public class Npc_MasterScript : MonoBehaviour,NpcPathFinding
 {
     [Header("Debug Settings")]
     [SerializeField]private bool Debuging;
@@ -125,34 +131,40 @@ public class Npc_MasterScript : MonoBehaviour
     void GeneratePath(Vector2 StartPos,Vector2 Goal)
     {
         Dictionary<Vector2, int> OpenList = new();  //v2 = pos , int = tilecost + f cost 
+        //create a hashtable of the node and its parent hashtable<vector2,vector2> where ther first one is its noad as each key uqiue and
+        Dictionary<Vector2,NpcPathFinding.Direction> ParentsList = new();
         HashSet<Vector2> ClosedList = new();
 
         int F = /*GetTileVaule(StartPos) +*/(0 + HGcost(StartPos, Goal)); //f cost of that tile 
         OpenList.Add(StartPos,F);
-        
+        ParentsList.Add(StartPos, NpcPathFinding.Direction.End);
 
         //get nabours 
         while (OpenList.Count > 0) {
             //sort list for lowest cost
             Vector2 Point = Vector2.zero;
             int i;
+           // OpenList.GetType(int)
             OpenList.TryGetValue(Goal,out i);
             
             //nabs
             if (Point == Goal) { 
-            OpenList.Clear();
-            //output the order reached
+                OpenList.Clear();
+                //output the order reached
+                //how will i output the tiles? recheck the closed list
+                break;
             }
 
             List<Vector2> nabs = new()
             {
                 //get nabs
-                new(Point.x - 1, Point.y),
-                new(Point.x + 1, Point.y),
-                new(Point.x, Point.y - 1),
-                new(Point.x, Point.y + 1)
+                new(Point.x - 1, Point.y),  //left
+                new(Point.x + 1, Point.y),  //right
+                new(Point.x, Point.y + 1),  //up
+                new(Point.x, Point.y - 1)   //down
             };
             //cal the cost of each
+            int iteration = 0;
             foreach (Vector2 nab in nabs)
             {
                 if (ClosedList.Contains(nab)) { break; }
@@ -163,8 +175,10 @@ public class Npc_MasterScript : MonoBehaviour
                 else
                 {
                     int cost = GetTileVaule(nab) + HGcost(nab,StartPos) + HGcost(nab,Goal);
+                    ParentsList.Add(nab,NpcPathFinding.Direction.Left+iteration);
                     OpenList.Add(nab, cost);
                 }
+                i++;
             }
             nabs.Clear();
             //we remove point as its a unique to each coord and wont reapaire 
