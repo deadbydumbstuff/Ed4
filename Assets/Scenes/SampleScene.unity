@@ -2660,8 +2660,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Debuging: 1
   DebugPoint: {fileID: 43254645}
-  NpcTrait: 0000000003000000
   TileBase: {fileID: 11400000, guid: c2559841824b8be4d855f0d948379395, type: 2}
+  NpcTrait: 0000000003000000
   TileData:
   - {fileID: 11400000, guid: 87740f0e6a1bf3b41a513770d48bf0fb, type: 2}
   - {fileID: 11400000, guid: 8ea3bbd473082934faf0dee3dd279d3f, type: 2}
