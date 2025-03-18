@@ -1,9 +1,8 @@
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting.Antlr3.Runtime.Collections;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using System.Linq;
+using TMPro;
 
 public interface NpcPathFinding
 {
@@ -145,7 +144,7 @@ public class Npc_MasterScript : MonoBehaviour,NpcPathFinding
             int i = OpenList.Values.Min();
             foreach (var kvp in OpenList)
             {
-                if (kvp.Value <= i)
+                if (kvp.Value == i)
                 {
                     Point = kvp.Key;
                     //Debug.Log(Point);
@@ -174,25 +173,44 @@ public class Npc_MasterScript : MonoBehaviour,NpcPathFinding
             foreach (Vector2 nab in nabs)
             {
                 iteration++;
-                if (ClosedList.Contains(nab)) { break; }
-                if (GetTileVaule(nab) == -1)
+                if (ClosedList.Contains(nab))
                 {
-                    ClosedList.Add(nab);
+                    GameObject Debug = Instantiate(DebugPoint);
+                    TMP_Text Text = Debug.transform.GetChild(0).GetChild(0).GetComponent<TMP_Text>();
+                    Debug.transform.position = nab;
+                    Debug.GetComponent<SpriteRenderer>().color = Color.blue;
+
+                    break;
+                }
+                if (GetTileVaule(nab) != -1)
+                {
+                    //something wrong with the cost not working
+                    int cost = GetTileVaule(nab) + HGcost(StartPos, nab) + HGcost(nab, Goal);
+                    ParentsList.Add(nab, NpcPathFinding.Direction.Left + iteration);
+                    //Debug.Log(iteration);
+                    GameObject Debugs = Instantiate(DebugPoint);
+                    TMP_Text Text = Debugs.transform.GetChild(0).GetChild(0).GetComponent<TMP_Text>();
+                    Debugs.transform.position = nab;
+                    Text.text = ($"Gcost {HGcost(nab, Goal)} \n Hcost {HGcost(StartPos, nab)} \n Fcost {HGcost(nab, StartPos) + HGcost(nab, Goal)} \n T cost = {GetTileVaule(nab) + HGcost(StartPos, nab) + HGcost(nab, Goal)} ");
+
+                    OpenList.Add(nab, cost);
+                    //Debug.Log(cost);
+                    //Debug.Log(ParentsList.Last());
+                    /*if (nab == Goal)
+                    {
+                        OpenList.Clear();
+                        Debug.Log("ee");
+                        return ParentsList;
+                    }*/
                 }
                 else
                 {
-                    //something wrong with the cost not working
-                    int cost = GetTileVaule(nab) + HGcost(nab,StartPos) + HGcost(nab,Goal);
-                    ParentsList.Add(nab,NpcPathFinding.Direction.Left+iteration);
-                    //Debug.Log(iteration);
-                    OpenList.Add(nab, cost);
-                    //Debug.Log(cost);
-                    Debug.Log(ParentsList.Last());
-                    if (nab == Goal)
-                    {
-                        OpenList.Clear();
-                        return ParentsList;
-                    }
+                    ClosedList.Add(nab);
+                    GameObject Debug = Instantiate(DebugPoint);
+                    TMP_Text Text = Debug.transform.GetChild(0).GetChild(0).GetComponent<TMP_Text>();
+                    Debug.transform.position = nab;
+                    Debug.GetComponent<SpriteRenderer>().color = Color.red;
+                    
                 }
             }
             nabs.Clear();

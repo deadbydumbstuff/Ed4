@@ -18,7 +18,7 @@ public class NpcBehaviour : MonoBehaviour, NpcPathFinding
     public NpcPathFinding.Direction dir;
     void Start()
     {
-        Path = masterScript.GeneratePath(goalPos, transform.position);
+        Path = masterScript.GeneratePath(transform.position, goalPos);
 
         dir = Path.Values.Last();
     }
@@ -40,10 +40,10 @@ public class NpcBehaviour : MonoBehaviour, NpcPathFinding
                     transform.position -= Vector3.left;
                     break;
                 case NpcPathFinding.Direction.Up://go down
-                    transform.position -= Vector3.down;
+                    transform.position += Vector3.down;
                     break;
                 case NpcPathFinding.Direction.Down://go up
-                    transform.position -= Vector3.up;
+                    transform.position += Vector3.up;
                     break;
                 case NpcPathFinding.Direction.End://reached goal
                     //Debug.Log("end");
