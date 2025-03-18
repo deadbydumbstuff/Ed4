@@ -8,7 +8,7 @@ using System.Linq;
 public interface NpcPathFinding
 {
     public enum Direction
-    { Left, Right, Up, Down, End }
+    { Left = 1, Right = 2, Up = 3, Down = 4, End = 5 }
 }
 public class Npc_MasterScript : MonoBehaviour,NpcPathFinding
 {
@@ -128,7 +128,7 @@ public class Npc_MasterScript : MonoBehaviour,NpcPathFinding
     /// </summary>
     /// <param name="StartPos"></param> the postion the npc starts from
     /// <param name="Goal"></param> the goal postion to creat the path from
-    void GeneratePath(Vector2 StartPos,Vector2 Goal)
+    public Dictionary<Vector2, NpcPathFinding.Direction> GeneratePath(Vector2 StartPos,Vector2 Goal)
     {
         Dictionary<Vector2, int> OpenList = new();  //v2 = pos , int = tilecost + f cost 
         //create a hashtable of the node and its parent hashtable<vector2,vector2> where ther first one is its noad as each key uqiue and
@@ -141,32 +141,39 @@ public class Npc_MasterScript : MonoBehaviour,NpcPathFinding
 
         //get nabours 
         while (OpenList.Count > 0) {
-            //sort list for lowest cost
             Vector2 Point = Vector2.zero;
-            int i;
-           // OpenList.GetType(int)
-            OpenList.TryGetValue(Goal,out i);
+            int i = OpenList.Values.Min();
+            foreach (var kvp in OpenList)
+            {
+                if (kvp.Value <= i)
+                {
+                    Point = kvp.Key;
+                    //Debug.Log(Point);
+                    break;
+                }
+            }
+            //OpenList.TryGetValue(StartPos,out i);
             
             //nabs
             if (Point == Goal) { 
                 OpenList.Clear();
-                //output the order reached
-                //how will i output the tiles? recheck the closed list
-                break;
+                Debug.Log("found");
+                return ParentsList;
             }
 
             List<Vector2> nabs = new()
             {
                 //get nabs
-                new(Point.x - 1, Point.y),  //left
-                new(Point.x + 1, Point.y),  //right
-                new(Point.x, Point.y + 1),  //up
-                new(Point.x, Point.y - 1)   //down
+                new(Point.x - 1, Point.y),  //left of center
+                new(Point.x + 1, Point.y),  //right of center
+                new(Point.x, Point.y + 1),  //up of center
+                new(Point.x, Point.y - 1)   //down of center
             };
             //cal the cost of each
             int iteration = 0;
             foreach (Vector2 nab in nabs)
             {
+                iteration++;
                 if (ClosedList.Contains(nab)) { break; }
                 if (GetTileVaule(nab) == -1)
                 {
@@ -174,24 +181,32 @@ public class Npc_MasterScript : MonoBehaviour,NpcPathFinding
                 }
                 else
                 {
+                    //something wrong with the cost not working
                     int cost = GetTileVaule(nab) + HGcost(nab,StartPos) + HGcost(nab,Goal);
                     ParentsList.Add(nab,NpcPathFinding.Direction.Left+iteration);
+                    //Debug.Log(iteration);
                     OpenList.Add(nab, cost);
+                    //Debug.Log(cost);
+                    Debug.Log(ParentsList.Last());
+                    if (nab == Goal)
+                    {
+                        OpenList.Clear();
+                        return ParentsList;
+                    }
                 }
-                i++;
             }
             nabs.Clear();
             //we remove point as its a unique to each coord and wont reapaire 
             OpenList.Remove(Point); //make sure we dont check this point again
             ClosedList.Add(Point);//make sure nabours dont readd this point again
-           // now we got an addest list of the nabours of the closest tile
+                                  // now we got an addest list of the nabours of the closest tile
         }
 
         //calculate f cost add fcost to a list
-        
+
         //on nabour check cal their h and g costs then add them then add that added number into the list
 
-
+        return ParentsList;
     }
 
 

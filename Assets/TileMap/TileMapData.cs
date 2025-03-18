@@ -10,7 +10,7 @@ public class TileMapData : ScriptableObject
     {
         Path = 0,
         Grass = 1,
-        DifficultTerrain = 5,
+        DifficultTerrain = 500,
         Water = 10,
         Impassible = -1
     }
