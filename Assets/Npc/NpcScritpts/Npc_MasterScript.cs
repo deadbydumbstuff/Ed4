@@ -3,12 +3,14 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using System.Linq;
 using TMPro;
+using UnityEngine.UIElements;
 
 public interface NpcPathFinding
 {
     public enum Direction
-    { Left = 1, Right = 2, Up = 3, Down = 4, End = 5 }
+    { Left = 0, Right = 1, Up = 2, Down = 3, End = 4}
 }
+
 public class Npc_MasterScript : MonoBehaviour,NpcPathFinding
 {
     [Header("Debug Settings")]
@@ -16,21 +18,8 @@ public class Npc_MasterScript : MonoBehaviour,NpcPathFinding
     [SerializeField] GameObject DebugPoint;
     [SerializeField] TileBase TileBase;
 
-    public class Npc //move this to a new script 
-    {
-        public string name; //Npc name duh
-        public int NpcId;// 
-        public string Job; // 
-        
-        public Dictionary<int,int> Inventory;
-    }
-
-
-
-    public Npc NpcData;
-
     public NpcTraits[] NpcTrait;
-    
+
     public enum NpcTraits
     {
         Friendly,
@@ -136,19 +125,35 @@ public class Npc_MasterScript : MonoBehaviour,NpcPathFinding
 
         int F = /*GetTileVaule(StartPos) +*/(0 + HGcost(StartPos, Goal)); //f cost of that tile 
         OpenList.Add(StartPos,F);
-        ParentsList.Add(StartPos, NpcPathFinding.Direction.End);
+        ParentsList.Add(Goal, NpcPathFinding.Direction.End);
 
+        int p = OpenList.Values.Min();
         //get nabours 
+        int tempcost = 0;
+        Vector2 Point = Vector2.zero;
         while (OpenList.Count > 0) {
-            Vector2 Point = Vector2.zero;
-            int i = OpenList.Values.Min();
+            Point = Vector2.zero;
+            p = OpenList.Values.Last();
+            
             foreach (var kvp in OpenList)
             {
-                if (kvp.Value == i)
+                if (kvp.Value <= p)
                 {
-                    Point = kvp.Key;
-                    //Debug.Log(Point);
-                    break;
+                    if (kvp.Value < p && HGcost(kvp.Key, Goal) < tempcost)
+                    {
+                        Point = kvp.Key;
+                        tempcost = HGcost(kvp.Key, Goal);
+                        Debug.Log(kvp.Value);
+                        break;
+                    }
+                    else if(kvp.Value == p)
+                    {
+                        Point = kvp.Key;
+                        tempcost = HGcost(kvp.Key,Goal );
+                        Debug.Log(kvp.Value);
+                        break;
+                    }
+
                 }
             }
             //OpenList.TryGetValue(StartPos,out i);
@@ -156,7 +161,12 @@ public class Npc_MasterScript : MonoBehaviour,NpcPathFinding
             //nabs
             if (Point == Goal) { 
                 OpenList.Clear();
-                Debug.Log("found");
+                //Debug.Log("found");
+
+                GameObject Debug = Instantiate(DebugPoint);
+                TMP_Text Text = Debug.transform.GetChild(0).GetChild(0).GetComponent<TMP_Text>();
+                Debug.transform.position = Goal;
+                Debug.GetComponent<SpriteRenderer>().color = Color.green;
                 return ParentsList;
             }
 
@@ -169,10 +179,12 @@ public class Npc_MasterScript : MonoBehaviour,NpcPathFinding
                 new(Point.x, Point.y - 1)   //down of center
             };
             //cal the cost of each
-            int iteration = 0;
+            int iteration = -1;
             foreach (Vector2 nab in nabs)
             {
                 iteration++;
+                int quickInt;
+                OpenList.TryGetValue(nab, out quickInt);
                 if (ClosedList.Contains(nab))
                 {
                     GameObject Debug = Instantiate(DebugPoint);
@@ -184,8 +196,8 @@ public class Npc_MasterScript : MonoBehaviour,NpcPathFinding
                 }
                 if (GetTileVaule(nab) != -1)
                 {
-                    //something wrong with the cost not working
-                    int cost = GetTileVaule(nab) + HGcost(StartPos, nab) + HGcost(nab, Goal);
+
+                    int cost = GetTileVaule(nab) + (HGcost(nab, StartPos) + HGcost(Goal, nab));
                     ParentsList.Add(nab, NpcPathFinding.Direction.Left + iteration);
                     //Debug.Log(iteration);
                     GameObject Debugs = Instantiate(DebugPoint);
@@ -196,12 +208,12 @@ public class Npc_MasterScript : MonoBehaviour,NpcPathFinding
                     OpenList.Add(nab, cost);
                     //Debug.Log(cost);
                     //Debug.Log(ParentsList.Last());
-                    /*if (nab == Goal)
+                    if (nab == Goal)
                     {
                         OpenList.Clear();
                         Debug.Log("ee");
                         return ParentsList;
-                    }*/
+                    }
                 }
                 else
                 {
@@ -210,7 +222,7 @@ public class Npc_MasterScript : MonoBehaviour,NpcPathFinding
                     TMP_Text Text = Debug.transform.GetChild(0).GetChild(0).GetComponent<TMP_Text>();
                     Debug.transform.position = nab;
                     Debug.GetComponent<SpriteRenderer>().color = Color.red;
-                    
+
                 }
             }
             nabs.Clear();
