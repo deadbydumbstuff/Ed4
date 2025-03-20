@@ -20,7 +20,7 @@ public class NpcBehaviour : MonoBehaviour, NpcPathFinding
     {
         Path = masterScript.GeneratePath(transform.position, goalPos);
 
-        dir = Path.Values.Last();
+        dir = Path.Values.First();
     }
 
     // Update is called once per frame
@@ -34,16 +34,16 @@ public class NpcBehaviour : MonoBehaviour, NpcPathFinding
             switch(dir)
             {
                 case NpcPathFinding.Direction.Left://go right
-                    transform.position -= Vector3.right;
+                    transform.position += Vector3.right;
                     break;
                 case NpcPathFinding.Direction.Right://go left
-                    transform.position -= Vector3.left;
+                    transform.position += Vector3.left;
                     break;
                 case NpcPathFinding.Direction.Up://go down
-                    transform.position -= Vector3.down;
+                    transform.position += Vector3.down;
                     break;
                 case NpcPathFinding.Direction.Down://go up
-                    transform.position -= Vector3.up;
+                    transform.position += Vector3.up;
                     break;
                 case NpcPathFinding.Direction.End://reached goal
                     //Debug.Log("end");
