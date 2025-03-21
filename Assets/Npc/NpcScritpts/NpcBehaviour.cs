@@ -25,19 +25,22 @@ public class NpcBehaviour : MonoBehaviour, NpcPathFinding
 
     }
 
-    // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
-            
+
             Vector3 vector3 = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector2 mousePos = new Vector2(vector3.x, vector3.y);
             Debug.Log(mousePos);
             mousePos = new Vector2(Mathf.Round(mousePos.x), Mathf.Round(mousePos.y));
             goalPos = mousePos;
-            Path = masterScript.GeneratePath(transform.position,mousePos);
+            Path = masterScript.GeneratePath(transform.position, mousePos);
         }
+    }
+    // Update is called once per frame
+    void FixedUpdate()
+    {
 
 
 
