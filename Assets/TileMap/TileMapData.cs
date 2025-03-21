@@ -9,8 +9,8 @@ public class TileMapData : ScriptableObject
     public enum TerrainType
     {
         Path = 0,
-        Grass = 1,
-        DifficultTerrain = 500,
+        Grass = 2,
+        DifficultTerrain = 5,
         Water = 10,
         Impassible = -1
     }
