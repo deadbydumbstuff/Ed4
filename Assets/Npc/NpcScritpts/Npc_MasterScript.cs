@@ -124,9 +124,9 @@ public class Npc_MasterScript : MonoBehaviour,NpcPathFinding
             int p = 643029;
             foreach (var kvp in OpenList)
             {
-                if (kvp.Value < p)
+                if ((GetTileVaule(kvp.Key)+kvp.Value) < p)
                 {
-                    p = kvp.Value;
+                    p = (GetTileVaule(kvp.Key) + kvp.Value);
                     Point = kvp.Key;
                 }
                 if (kvp.Value == p && (GetTileVaule(kvp.Key) + HGcost(kvp.Key, Goal)) <= (GetTileVaule(Point) + HGcost(Point, Goal)))
