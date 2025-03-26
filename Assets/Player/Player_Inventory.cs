@@ -32,7 +32,7 @@ public class Player_Inventory : MonoBehaviour
 
     public void Trade(GameObject Npc, Dictionary<ItemSObj, int> inventory)
     {
-        //
+        // 
     }
 
 }
