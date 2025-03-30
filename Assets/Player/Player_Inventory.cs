@@ -1,10 +1,25 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 
-public class Player_Inventory : MonoBehaviour
+public class Player_Inventory : MonoBehaviour,InventoryIf
 {
-    Dictionary<ItemSObj,int> inventory = new(); //item,quantity
+    [Header("Debug")]
+    [SerializeField]KeyCode SpawnItem;
+    [SerializeField]ItemSObj DebugItem;
 
+    [Header("Core")]
+
+    public List<InventoryIf.Item> inventory = new();
+    public KeyCode inventoryKey;
+    [SerializeField] Inventory_Manager inventory_Manager;
+
+    [Space][Header("Ui")]
+    public GameObject Ui;
+    //get the other ui
+    //pages
+    //inventoryslots
+    //displays
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -15,24 +30,28 @@ public class Player_Inventory : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
-    }
+        if (Input.GetKeyDown(SpawnItem))
+        {
+            //open da inventory
+            //search inventory if contains this item allready if so quanity + 1
+            inventory_Manager.AddItem(inventory, DebugItem, 1 );
+        }
 
+        if (Input.GetKeyDown(inventoryKey))
+        {
+            //open da inventory
+            PrintInventory();
+        }
+    }
     /// <summary>
-    /// 
+    /// debugs out an entier inventory
     /// </summary>
-    /// <param name="Canvas"></param> a prefab of the required inventory objected needed to render   ,and their item slots
-    /// <param name="inventory"></param>
-    public void RenderInventory(GameObject Canvas, Dictionary<ItemSObj, int> inventory)
+    void PrintInventory()
     {
-        //get the parent of all the inventory slots (could have thse sorted to pages aswell
-        //for each every item slot
-        //if more then limit then active the pages sysetet to flip through them
+        foreach (InventoryIf.Item item in inventory)
+        {
+            Debug.Log(item.ItemType);
+            Debug.Log(item.Quantity);
+        }
     }
-
-    public void Trade(GameObject Npc, Dictionary<ItemSObj, int> inventory)
-    {
-        // 
-    }
-
 }

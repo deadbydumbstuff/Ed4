@@ -2,7 +2,15 @@ using UnityEngine;
 
 public interface ItemInterface
 {
-    public void PlaceHolder();
+    public enum ItemType
+    {
+        Null,
+        Plant,
+        Herb,
+        Bread
+    }
+
+    //public void PlaceHolder();
     //item interaction such as pick up drop remove place use,
 }
 public class InvertoryInterfact
