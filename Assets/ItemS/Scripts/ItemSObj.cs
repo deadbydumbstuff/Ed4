@@ -3,7 +3,9 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "ItemSObj", menuName = "Scriptable Objects/ItemSObj")]
 public class ItemSObj : ScriptableObject,ItemInterface
 {
-    public string ItemName;
+    public string itemName;
+    public string itemDescription;
+    public string itemFlavourText;//optional and will be displayed in a fnacy font and in ittatlics
     public int baseCost;
     public Sprite itemIcon;
 

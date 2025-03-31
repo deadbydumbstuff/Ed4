@@ -112,7 +112,15 @@ public class Inventory_Manager : MonoBehaviour,InventoryIf,ItemInterface
     /// </summary>
     void ClearPage()
     {
-        
+        //remove the renderd page
+    }
+
+    void ToolTip(InventoryIf.Item item)
+    {
+        // need to add a scaling factor so i can have the size of the text box scale with text density
+        Debug.Log($"{item.ItemType.name} \n {item.ItemType.itemDescription}");
+        // if itemfalour text != null 
+        Debug.Log(item.ItemType.itemFlavourText); //fancy text bellow the original description
     }
 
     #region Trading
