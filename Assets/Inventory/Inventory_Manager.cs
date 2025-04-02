@@ -15,6 +15,7 @@ public interface InventoryIf
 
 public class Inventory_Manager : MonoBehaviour,InventoryIf,ItemInterface
 {
+    [SerializeField] GameObject ItemPage;
     // this script will be a general manager for the inventory
 
     /// <summary>
@@ -102,9 +103,26 @@ public class Inventory_Manager : MonoBehaviour,InventoryIf,ItemInterface
     /// <summary>
     /// turn the list of objects in the players inventory into displayed items on a a page
     /// </summary>
-    void GeneratePage(List<InventoryIf.Item> Items)
+    public void GeneratePage(List<InventoryIf.Item> Items)
     {
-
+        int i = 0; 
+        foreach (InventoryIf.Item ItemSlot in Items)
+        {
+            Transform Child = ItemPage.transform.GetChild(i);
+            if (Child != null)
+            {
+                //set the vaules 
+                Debug.Log("SLOT");
+               Inventory_ItemSlot Is = Child.GetComponent<Inventory_ItemSlot>();
+               Is.SetItem(ItemSlot);
+            }
+            else
+            {
+                Debug.Log(" NO SLOT");
+                //create a new item slot
+            }
+            i++;
+        }
         ///foreach loop every item in an ineventory in the range of items in the list eg page one is 1-12 and 12-24 then page two is 24-36 and so on and displayu them in each open slot
     }
     /// <summary>

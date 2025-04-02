@@ -35,6 +35,7 @@ public class Player_Inventory : MonoBehaviour,InventoryIf
             //open da inventory
             //search inventory if contains this item allready if so quanity + 1
             inventory_Manager.AddItem(inventory, DebugItem, 1 );
+            inventory_Manager.GeneratePage(inventory);
         }
 
         if (Input.GetKeyDown(inventoryKey))
