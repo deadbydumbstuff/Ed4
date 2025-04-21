@@ -7,9 +7,10 @@ public class Player_Inventory : MonoBehaviour,InventoryIf
     [Header("Debug")]
     [SerializeField]KeyCode SpawnItem;
     [SerializeField]ItemSObj DebugItem;
+    [SerializeField]ItemSObj DebugAntherItem;
 
     [Header("Core")]
-
+    public Player_Core Core;
     public List<InventoryIf.Item> inventory = new();
     public KeyCode inventoryKey;
     [SerializeField] Inventory_Manager inventory_Manager;
@@ -24,7 +25,7 @@ public class Player_Inventory : MonoBehaviour,InventoryIf
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        inventory_Manager.GeneratePage(Core.name, inventory, inventory_Manager.ItemPage[0]);
     }
 
     // Update is called once per frame
@@ -34,25 +35,36 @@ public class Player_Inventory : MonoBehaviour,InventoryIf
         {
             //open da inventory
             //search inventory if contains this item allready if so quanity + 1
-            inventory_Manager.AddItem(inventory, DebugItem, 1 );
-            inventory_Manager.GeneratePage(inventory);
+            inventory_Manager.AddItem(inventory, DebugItem, 1 ,Core.name);
+            
         }
 
         if (Input.GetKeyDown(inventoryKey))
         {
             //open da inventory
-            PrintInventory();
+            OpenInventory();
         }
+    }
+
+    #region Debug_Funcs
+    public void Debug_AddItem()
+    {
+        inventory_Manager.AddItem(inventory, DebugAntherItem, 1, Core.Name);
+    }
+    public void Debug_RemoveItem()
+    {
+        if (inventory.Count <= 0) { Debug.Log("no items"); return; }
+        inventory_Manager.RemoveItem(inventory, inventory.Last().ItemType, 1, Core.name);
     }
     /// <summary>
     /// debugs out an entier inventory
     /// </summary>
-    void PrintInventory()
+    void OpenInventory()
     {
-        foreach (InventoryIf.Item item in inventory)
-        {
-            Debug.Log(item.ItemType);
-            Debug.Log(item.Quantity);
-        }
+        //open inventoryu function pass in the relevent information and displat
+        //the set invenotry two true 
+        // if inventory open then close it instead :3 (disable inventory and change bool and set type)
+        inventory_Manager.OpenInventory(0, Core.name, inventory);
     }
+    #endregion
 }

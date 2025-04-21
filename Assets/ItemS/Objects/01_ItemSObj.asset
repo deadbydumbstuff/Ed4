@@ -10,9 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1b1d323144bd541469d114024292e78c, type: 3}
-  m_Name: ItemSObj
+  m_Name: 01_ItemSObj
   m_EditorClassIdentifier: 
-  ItemName: HAIIIII
+  itemName: 
+  itemDescription: potion frame
+  itemFlavourText: 
   baseCost: 0
   itemIcon: {fileID: -7025713891940003369, guid: a37c91d2adc55fd429a8685e48111239, type: 3}
   type: 0
