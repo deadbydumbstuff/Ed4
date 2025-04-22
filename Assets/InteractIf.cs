@@ -2,6 +2,7 @@ using UnityEngine;
 
 public interface Interactable
 {
-    void EnterRange();
+    public void EnterRange();//poly script :3
+
     void Interact();
 }

@@ -1,11 +1,13 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class InteractionTest : MonoBehaviour,Interactable
 {
+    Inventory_Manager inventory;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        inventory = GameObject.FindGameObjectWithTag("GlobalManager").GetComponent<Inventory_Manager>();
     }
 
     // Update is called once per frame
@@ -25,6 +27,7 @@ public class InteractionTest : MonoBehaviour,Interactable
         //create a popup to show thi ssitem is interactable
         //edit the sprit to have an outline? shaders?????
         //track 
+        inventory.OpenInventory(1, "Penis", new List<InventoryIf.Item> { new InventoryIf.Item {Quantity = 1 } });
         Debug.Log("test");
     }
 }

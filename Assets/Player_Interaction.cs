@@ -1,9 +1,10 @@
 using UnityEngine;
 using System.Collections.Generic;
+//using System.linq;
 
 public class Player_Interaction : MonoBehaviour
 {
-    private List<Interactable> interactable;
+    private List<GameObject> interactable;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -21,21 +22,25 @@ public class Player_Interaction : MonoBehaviour
         //could add a sorta 
         if (collision.gameObject.GetComponent<Interactable>() != null)
         {
-            Interactable ie = collision.gameObject.GetComponent<Interactable>();
+            var ie = collision.gameObject.GetComponents<Interactable>();
             //this item is interactable do the on enter function :3
             //open a menu like something
-            Debug.Log("test");
-            ie.EnterRange(); // shows the propmt to interact
-            interactable.Add(ie);
+            foreach (var I in ie)
+            {
+                Debug.Log(I);
+                I.EnterRange(); // shows the propmt to interact
+                interactable.Add(collision.gameObject);
+            }
+    
         }
 
        
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (interactable.Contains(collision.GetComponent<Interactable>() ) )
+        if (interactable.Contains(collision.gameObject) )
         {
-            interactable.Remove(collision.GetComponent<Interactable>());
+            interactable.Remove(collision.gameObject);
         }
         //if object in interaction list disable it //also check for tags in the firstplace
     }
