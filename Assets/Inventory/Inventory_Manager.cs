@@ -7,6 +7,7 @@ using TMPro;
 
 public interface InventoryIf
 {
+    [System.Serializable]
     public class Item
     {
         public ItemSObj ItemType;

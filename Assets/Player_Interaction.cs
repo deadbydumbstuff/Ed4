@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class Player_Interaction : MonoBehaviour
 {
-    private List<GameObject> interactable;
+    public List<GameObject> interactable;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -22,10 +22,10 @@ public class Player_Interaction : MonoBehaviour
         //could add a sorta 
         if (collision.gameObject.GetComponent<Interactable>() != null)
         {
-            var ie = collision.gameObject.GetComponents<Interactable>();
+            Interactable[] ie = collision.gameObject.GetComponents<Interactable>();
             //this item is interactable do the on enter function :3
             //open a menu like something
-            foreach (var I in ie)
+            foreach (Interactable I in ie)
             {
                 Debug.Log(I);
                 I.EnterRange(); // shows the propmt to interact
@@ -40,6 +40,7 @@ public class Player_Interaction : MonoBehaviour
     {
         if (interactable.Contains(collision.gameObject) )
         {
+            collision.gameObject.GetComponent<Interactable>().ExitRange();
             interactable.Remove(collision.gameObject);
         }
         //if object in interaction list disable it //also check for tags in the firstplace

@@ -73,7 +73,7 @@ public class Inventory_ItemSlot : MonoBehaviour,InventoryIf,OnClick
 
     public void HoverOver()
     {
-        if (item != null) { StartCoroutine(ShowToolTip()); }
+        if (item.ItemType != null) { StartCoroutine(ShowToolTip()); }
     }
 
     IEnumerator ShowToolTip()
