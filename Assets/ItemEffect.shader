@@ -4,7 +4,7 @@ Shader "Unlit/ItemEffect"
     Properties
     {
         _MainTex("Diffuse", 2D) = "white" {}
-        GlintColour("eeepie",Color) = (1,1,1,1)
+       // GlintColour("eeepie",Color) = (1,1,1,1)
         GlintTex("GlintTex", 2D) = "white" {}
        //GlintSpeed("GlintSpped",Float) = 1
         _MaskTex("Mask", 2D) = "white" {}
@@ -26,7 +26,7 @@ Shader "Unlit/ItemEffect"
         Cull Off
         ZWrite [_ZWrite]
         ZTest Off
-
+        
         Pass
         {
             Tags { "LightMode" = "Universal2D" }
@@ -74,7 +74,7 @@ Shader "Unlit/ItemEffect"
             TEXTURE2D(_MaskTex);
             SAMPLER(sampler_MaskTex);
 
-            //float4 GlintColour:
+            float4 GlintColour;
            // float GlintSpped;
             TEXTURE2D(GlintTex);
             SAMPLER(sampler_GlintTex);
@@ -82,9 +82,6 @@ Shader "Unlit/ItemEffect"
             // NOTE: Do not ifdef the properties here as SRP batcher can not handle different layouts.
             CBUFFER_START(UnityPerMaterial)
                 half4 _Color;
-            CBUFFER_END
-            CBUFFER_START(GlintColUPM)
-                half4 GlintColour;
             CBUFFER_END
 
             #if USE_SHAPE_LIGHT_TYPE_0
@@ -129,7 +126,7 @@ Shader "Unlit/ItemEffect"
             {
                 //half3 meow = (0.5,0.5,0.5);
                 const half4 main = i.color * SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv);
-                //const half4 glint = i.color * SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv);
+                const half4 glint = i.color * SAMPLE_TEXTURE2D(GlintTex, sampler_MainTex, i.uv);
                 const half4 mask = SAMPLE_TEXTURE2D(_MaskTex, sampler_MaskTex, i.uv);
                 SurfaceData2D surfaceData;
                 InputData2D inputData;
@@ -144,21 +141,22 @@ Shader "Unlit/ItemEffect"
                        float sine = abs(_SinTime.w);
                        float P = abs(sin(_Time.z /2 ));
 
-                       half R = glintpos.r * sine;
-                       half G = glintpos.g * abs(sin(_Time.w + P / 3));
-                       half B = glintpos.b * abs(sin(_Time.w + 2 * P));
+                       glintpos.r = glintpos.r * sin(_Time.w * 3 + 4)/3 + 0.7;
+                       glintpos.g = glintpos.g * sin(_Time.w)/3 + 0.65;
+                       glintpos.b = glintpos.b * sin(_Time.w * 1.6)/3 + 0.65;
 
 
-                       float3 GlintRGB = (R * GlintColour.x ,G * GlintColour.y,B * GlintColour.z);
+                      // float3 GlintRGB = (R ,G,B);
                       // half3 mainM = (1,1,1);
                        //half4 meow = (0,0,0,1);
                       // float3 glintref = (GlintColour.r,GlintColour.g,GlintColour.b);
                        
-                InitializeSurfaceData(main.rgb * (GlintRGB), main.a, mask, surfaceData);
+                InitializeSurfaceData(main * (((glintpos * (30,30,30))) , main.a, mask, surfaceData);
                 //InitializeSurfaceData(main.rgb + GlintRGB, main.a, mask, surfaceData);
                 InitializeInputData(i.uv, i.lightingUV, inputData);
 
                 SETUP_DEBUG_TEXTURE_DATA_2D_NO_TS(inputData, i.positionWS, i.positionCS, _MainTex);
+                //surfaceData.rgb = surfaceData.rgb * GlintColour;
 
                 return CombinedShapeLightShared(surfaceData , inputData); // THIS IS THE SHAADER SECT5ION USING
             }
@@ -200,7 +198,7 @@ Shader "Unlit/ItemEffect"
                 half3   bitangentWS     : TEXCOORD3;
                 UNITY_VERTEX_OUTPUT_STEREO
             };
-
+            half4 GlintColour;
             TEXTURE2D(_MainTex);
             SAMPLER(sampler_MainTex);
             TEXTURE2D(_NormalMap);
