@@ -151,7 +151,7 @@ Shader "Unlit/ItemEffect"
                        //half4 meow = (0,0,0,1);
                       // float3 glintref = (GlintColour.r,GlintColour.g,GlintColour.b);
                        
-                InitializeSurfaceData(main * ((glintpos * (30,30,30))) , main.a, mask, surfaceData);
+                InitializeSurfaceData(main * ( (glintpos * (30,30,30)  )  ) , main.a, mask, surfaceData);
                 //InitializeSurfaceData(main.rgb + GlintRGB, main.a, mask, surfaceData);
                 InitializeInputData(i.uv, i.lightingUV, inputData);
 
