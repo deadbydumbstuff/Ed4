@@ -6,3 +6,4 @@ public interface Interactable
     public void ExitRange();
     void Interact();
 }
+

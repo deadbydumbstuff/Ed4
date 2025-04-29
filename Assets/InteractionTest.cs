@@ -4,10 +4,12 @@ public class InteractionTest : MonoBehaviour,Interactable
 {
     Inventory_Manager inventory;
     public List<InventoryIf.Item> InventoryTemp;
+    MaterialPropertyBlock MatProBlk;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         inventory = GameObject.FindGameObjectWithTag("GlobalManager").GetComponent<Inventory_Manager>();
+        MakeMPB();
     }
 
     // Update is called once per frame
@@ -28,12 +30,27 @@ public class InteractionTest : MonoBehaviour,Interactable
         //edit the sprit to have an outline? shaders?????
         //track 
         inventory.OpenInventory(1, "Chest", InventoryTemp);
-        Debug.Log("test");
+        MatProBlk.SetFloat("toggle", 1);
+        GetComponent<SpriteRenderer>().SetPropertyBlock(MatProBlk);
+        //Debug.Log("test");
     }
 
     public void ExitRange()
     {
         inventory.CloseInventory("Chest");
+        MatProBlk.SetFloat("toggle", 0);
+        GetComponent<SpriteRenderer>().SetPropertyBlock(MatProBlk);
         //throw new System.NotImplementedException();
+    }
+   
+
+    public void MakeMPB()
+    {
+        MatProBlk = new MaterialPropertyBlock();
+        //apply the material property block
+        //setfloat
+        MatProBlk.SetFloat("toggle", 0);
+        GetComponent<SpriteRenderer>().SetPropertyBlock(MatProBlk);
+        //
     }
 }

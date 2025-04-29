@@ -46,8 +46,11 @@ Material:
     m_Ints: []
     m_Floats:
     - GlintSpeed: 1
+    - Toggle: 0
     - _EnableExternalAlpha: 0
-    - _ZWrite: 0
+    - _ZWrite: 12
+    - intensity: 0
+    - toggle: 1
     m_Colors:
     - GlintColour: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}

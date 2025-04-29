@@ -45,4 +45,5 @@ public class Player_Interaction : MonoBehaviour
         }
         //if object in interaction list disable it //also check for tags in the firstplace
     }
+
 }

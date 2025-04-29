@@ -1,19 +1,17 @@
 Shader "Unlit/ItemEffect"
 {
-    
     Properties
     {
+
         _MainTex("Diffuse", 2D) = "white" {}
-       // GlintColour("eeepie",Color) = (1,1,1,1)
-        GlintTex("GlintTex", 2D) = "white" {}
-       //GlintSpeed("GlintSpped",Float) = 1
+        toggle("toggle",float) = 0 
         _MaskTex("Mask", 2D) = "white" {}
         _NormalMap("Normal Map", 2D) = "bump" {}
         _ZWrite("ZWrite", Float) = 0
 
         // Legacy properties. They're here so that materials using this shader can gracefully fallback to the legacy sprite shader.
         [HideInInspector] _Color("Tint", Color) = (1,1,1,1)
-        [HideInInspector] _RendererColor("RendererColor", Color) = (1,1,1,1)
+         _RendererColor("RendererColor", Color) = (1,1,1,1)
         [HideInInspector] _AlphaTex("External Alpha", 2D) = "white" {}
         [HideInInspector] _EnableExternalAlpha("Enable External Alpha", Float) = 0
     }
@@ -26,14 +24,15 @@ Shader "Unlit/ItemEffect"
         Cull Off
         ZWrite [_ZWrite]
         ZTest Off
-        
+
         Pass
         {
             Tags { "LightMode" = "Universal2D" }
-            
+
             HLSLPROGRAM
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/Shaders/2D/Include/Core2D.hlsl"
+
             #pragma vertex CombinedShapeLightVertex
             #pragma fragment CombinedShapeLightFragment
 
@@ -65,19 +64,12 @@ Shader "Unlit/ItemEffect"
             #include "Packages/com.unity.render-pipelines.universal/Shaders/2D/Include/LightingUtility.hlsl"
             #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/DebugMipmapStreamingMacros.hlsl"
 
-            //half4 backingcolour; //CURSED!!!!! CURSED I SAY
-
             TEXTURE2D(_MainTex);
             SAMPLER(sampler_MainTex);
             UNITY_TEXTURE_STREAMING_DEBUG_VARS_FOR_TEX(_MainTex);
 
             TEXTURE2D(_MaskTex);
             SAMPLER(sampler_MaskTex);
-
-            float4 GlintColour;
-           // float GlintSpped;
-            TEXTURE2D(GlintTex);
-            SAMPLER(sampler_GlintTex);
 
             // NOTE: Do not ifdef the properties here as SRP batcher can not handle different layouts.
             CBUFFER_START(UnityPerMaterial)
@@ -116,49 +108,28 @@ Shader "Unlit/ItemEffect"
                 o.lightingUV = half2(ComputeScreenPos(o.positionCS / o.positionCS.w).xy);
 
                 o.color = v.color * _Color * unity_SpriteColor;
-               //o.Gcolor =v.color * _Color * unity_SpriteColor *  GlintColour;
                 return o;
             }
 
             #include "Packages/com.unity.render-pipelines.universal/Shaders/2D/Include/CombinedShapeLightShared.hlsl"
 
+            const half toggle;
+
             half4 CombinedShapeLightFragment(Varyings i) : SV_Target
             {
-                //half3 meow = (0.5,0.5,0.5);
                 const half4 main = i.color * SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv);
-                const half4 glint = i.color * SAMPLE_TEXTURE2D(GlintTex, sampler_MainTex, i.uv);
                 const half4 mask = SAMPLE_TEXTURE2D(_MaskTex, sampler_MaskTex, i.uv);
                 SurfaceData2D surfaceData;
                 InputData2D inputData;
-                       /// MAIN TEXTURE  float3 , 1     mask?   
-                       //red valuve
-                       //green vaule  abs(SinTime_X) //use these to controll the intreesitys of the time
-                       //blue     sintimes
-                       //half3 meow = (0.5,0.5,0.5);
-                       //mult the values of the i,uv coord with the glit TEXTURE
-                       half4 glintpos = i.color * SAMPLE_TEXTURE2D(GlintTex,sampler_MainTex,i.uv);
-                       //take the rgb vaules cfrom glit pos 
-                       float sine = abs(_SinTime.w);
-                       float P = abs(sin(_Time.z /2 ));
 
-                       glintpos.r = glintpos.r * sin(_Time.w * 3 + 4)/3 + 0.7;
-                       glintpos.g = glintpos.g * sin(_Time.w)/3 + 0.65;
-                       glintpos.b = glintpos.b * sin(_Time.w * 1.6)/3 + 0.65;
+               // if (toggle ==1
 
-
-                      // float3 GlintRGB = (R ,G,B);
-                      // half3 mainM = (1,1,1);
-                       //half4 meow = (0,0,0,1);
-                      // float3 glintref = (GlintColour.r,GlintColour.g,GlintColour.b);
-                       
-                InitializeSurfaceData(main * ( (glintpos * (30,30,30)  )  ) , main.a, mask, surfaceData);
-                //InitializeSurfaceData(main.rgb + GlintRGB, main.a, mask, surfaceData);
+                InitializeSurfaceData(main.rgb - toggle, main.a, mask, surfaceData);
                 InitializeInputData(i.uv, i.lightingUV, inputData);
 
                 SETUP_DEBUG_TEXTURE_DATA_2D_NO_TS(inputData, i.positionWS, i.positionCS, _MainTex);
-                //surfaceData.rgb = surfaceData.rgb * GlintColour;
 
-                return CombinedShapeLightShared(surfaceData , inputData); // THIS IS THE SHAADER SECT5ION USING
+                return CombinedShapeLightShared(surfaceData, inputData);
             }
             ENDHLSL
         }
@@ -198,7 +169,7 @@ Shader "Unlit/ItemEffect"
                 half3   bitangentWS     : TEXCOORD3;
                 UNITY_VERTEX_OUTPUT_STEREO
             };
-            half4 GlintColour;
+
             TEXTURE2D(_MainTex);
             SAMPLER(sampler_MainTex);
             TEXTURE2D(_NormalMap);
@@ -232,13 +203,13 @@ Shader "Unlit/ItemEffect"
             {
                 const half4 mainTex = i.color * SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv);
                 const half3 normalTS = UnpackNormal(SAMPLE_TEXTURE2D(_NormalMap, sampler_NormalMap, i.uv));
-                //                               half4
-                return NormalsRenderingShared( mainTex, normalTS, i.tangentWS.xyz, i.bitangentWS.xyz, i.normalWS.xyz);
+
+                return NormalsRenderingShared(mainTex, normalTS, i.tangentWS.xyz, i.bitangentWS.xyz, i.normalWS.xyz);
             }
             ENDHLSL
         }
 
-        Pass //unlit pass
+        Pass
         {
             Tags { "LightMode" = "UniversalForward" "Queue"="Transparent" "RenderType"="Transparent"}
 
@@ -300,11 +271,6 @@ Shader "Unlit/ItemEffect"
                 o.color = attributes.color * _Color * unity_SpriteColor;
                 return o;
             }
-            
-            float4 GlintColour;
-            float GlintSpped;
-            TEXTURE2D(GlintTex);
-            SAMPLER(sampler_GlintTex);
 
             float4 UnlitFragment(Varyings i) : SV_Target
             {
@@ -326,9 +292,8 @@ Shader "Unlit/ItemEffect"
                 #endif
 
                 /// using time time and time 
-                //i.uv <-- xy coord 
-                //mainTex = (1,1,1,1); 
-                //mainTex =  SAMPLE_TEXTURE2D(GlintTex,sampler_GlintTex, i.uv);
+
+
 
                 return mainTex;
             }
