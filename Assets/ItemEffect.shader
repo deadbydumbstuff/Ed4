@@ -125,27 +125,27 @@ Shader "Unlit/ItemEffect"
                 SurfaceData2D surfaceData;
                 InputData2D inputData;
 
-                InitializeSurfaceData(main.rgb, main.a, mask, surfaceData);
-                InitializeInputData(i.uv, i.lightingUV, inputData);
+                half R  = Glint.r *  sin(_Time.w *  3 + 4)   /4  +   0.7  ;
+                half G  = Glint.g *    sin(_Time.w)            /3  +   0.65 ;
+                half B  = Glint.b *    sin(_Time.w * 1.6)      /3  +   0.65 ; 
 
-                half R  =    sin(_Time.w *  3 + 4)   /4  +   0.7;
-                half G  =    sin(_Time.w)            /3  +   0.65;
-                half B  =    sin(_Time.w * 1.6)      /3  +   0.65;
-
-                half3 Rgb = (R * Glint.r,G * Glint.g,B * Glint.b);
-
+                half4 glinttype = half4(1,1,1,0);
+                
                 //calcuations
                 if (toggle >=1) {
-                    Rgb = (R * Glint.r,G * Glint.g,B * Glint.b) * -1;
+                    glinttype.rgb = main + (half3(R,B,G));
                     }
                     else {
-                         Rgb = (1,1,1);
+                        glinttype.rgb = main.rgb;
                         }
 
-
+                InitializeSurfaceData(main.a, main.a, mask, surfaceData);
+                InitializeInputData(i.uv, i.lightingUV, inputData);
 
                 SETUP_DEBUG_TEXTURE_DATA_2D_NO_TS(inputData, i.positionWS, i.positionCS, _MainTex);
-                surfaceData.albedo.rgb = main.rgb + (Rgb.rgb);
+                surfaceData.albedo.r = glinttype.r ;
+                surfaceData.albedo.g = glinttype.g ;
+                surfaceData.albedo.b = glinttype.b ;
                 return CombinedShapeLightShared(surfaceData, inputData);
             }
             ENDHLSL
