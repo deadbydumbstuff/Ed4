@@ -4,8 +4,15 @@ public class InteractionManager : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     //CREATE MATERIAL PROPERTY BLOCK
-    void MaterialProBlk(GameObject obect)
+    public void MaterialProBlk(GameObject obect)
     {
-        //when this function called make that object get a mateiral property block
+        MaterialPropertyBlock MatProBlk = new();
+        MatProBlk.SetTexture("main", GetComponent<SpriteRenderer>().sprite.texture);
+        obect.GetComponent<SpriteRenderer>().SetPropertyBlock(MatProBlk);
+    }
+
+    public void UpdateMatpro()
+    {
+
     }
 }

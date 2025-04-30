@@ -18,6 +18,7 @@ public class Player_Core : MonoBehaviour
 
 
     [Header("Interaction")]
+    public KeyCode interact;
     public float Range;
     //list of items
     // somethging else

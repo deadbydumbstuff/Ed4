@@ -126,8 +126,8 @@ Shader "Unlit/ItemEffect"
                 InputData2D inputData;
 
                 half R  = Glint.r *  sin(_Time.w *  3 + 4)   /4  +   0.7  ;
-                half G  = Glint.g *    sin(_Time.w)            /3  +   0.65 ;
-                half B  = Glint.b *    sin(_Time.w * 1.6)      /3  +   0.65 ; 
+                half G  = Glint.g *    sin((_Time.w + 0.5) /3)            /5 +   0.65 ;
+                half B  = Glint.b *    sin(_Time.w * 1.6)      /5  +   0.65 ; 
 
                 half4 glinttype = half4(1,1,1,0);
                 
@@ -136,7 +136,7 @@ Shader "Unlit/ItemEffect"
                     glinttype.rgb = main + (half3(R,B,G));
                     }
                     else {
-                        glinttype.rgb = main.rgb;
+                        glinttype.rgb = main.rgb + ((0.98 - ceil(main.rgb)) * half3(R,B,G));
                         }
 
                 InitializeSurfaceData(main.a, main.a, mask, surfaceData);
