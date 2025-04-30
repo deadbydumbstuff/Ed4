@@ -27,6 +27,10 @@ Material:
         m_Texture: {fileID: 2800000, guid: 51c3ff249bf7d544aacd01cbb261bd40, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - GlintText:
+        m_Texture: {fileID: 2800000, guid: 51c3ff249bf7d544aacd01cbb261bd40, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _AlphaTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -48,9 +52,9 @@ Material:
     - GlintSpeed: 1
     - Toggle: 0
     - _EnableExternalAlpha: 0
-    - _ZWrite: 12
+    - _ZWrite: 0
     - intensity: 0
-    - toggle: 1
+    - toggle: 1.06
     m_Colors:
     - GlintColour: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}

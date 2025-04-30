@@ -9,6 +9,9 @@ public class InteractionTest : MonoBehaviour,Interactable
     void Start()
     {
         inventory = GameObject.FindGameObjectWithTag("GlobalManager").GetComponent<Inventory_Manager>();
+        MatProBlk = new();
+        GetComponent<SpriteRenderer>().GetPropertyBlock(MatProBlk);
+        MatProBlk.SetTexture("main", GetComponent<SpriteRenderer>().sprite.texture);
         MakeMPB();
     }
 
@@ -46,11 +49,17 @@ public class InteractionTest : MonoBehaviour,Interactable
 
     public void MakeMPB()
     {
-        MatProBlk = new MaterialPropertyBlock();
         //apply the material property block
         //setfloat
         MatProBlk.SetFloat("toggle", 0);
         GetComponent<SpriteRenderer>().SetPropertyBlock(MatProBlk);
         //
+    }
+
+    private void OnValidate()
+    {
+        MatProBlk = new();
+        MatProBlk.SetTexture("main", GetComponent<SpriteRenderer>().sprite.texture);
+        GetComponent<SpriteRenderer>().SetPropertyBlock(MatProBlk);
     }
 }

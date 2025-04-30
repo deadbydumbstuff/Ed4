@@ -2,16 +2,16 @@ Shader "Unlit/ItemEffect"
 {
     Properties
     {
-
         _MainTex("Diffuse", 2D) = "white" {}
-        toggle("toggle",float) = 0 
+        toggle("toggle",Float) = 0
+        GlintText("Glint",2D) = "white" {}
         _MaskTex("Mask", 2D) = "white" {}
         _NormalMap("Normal Map", 2D) = "bump" {}
         _ZWrite("ZWrite", Float) = 0
 
         // Legacy properties. They're here so that materials using this shader can gracefully fallback to the legacy sprite shader.
         [HideInInspector] _Color("Tint", Color) = (1,1,1,1)
-         _RendererColor("RendererColor", Color) = (1,1,1,1)
+        [HideInInspector] _RendererColor("RendererColor", Color) = (1,1,1,1)
         [HideInInspector] _AlphaTex("External Alpha", 2D) = "white" {}
         [HideInInspector] _EnableExternalAlpha("Enable External Alpha", Float) = 0
     }
@@ -113,22 +113,39 @@ Shader "Unlit/ItemEffect"
 
             #include "Packages/com.unity.render-pipelines.universal/Shaders/2D/Include/CombinedShapeLightShared.hlsl"
 
-            const half toggle;
+            const float toggle;
+            TEXTURE2D(GlintText);
+            //SAMPLER(sample_GlintText);
 
             half4 CombinedShapeLightFragment(Varyings i) : SV_Target
             {
                 const half4 main = i.color * SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv);
+                const half4 Glint = i.color * SAMPLE_TEXTURE2D(GlintText, sampler_MainTex, i.uv);
                 const half4 mask = SAMPLE_TEXTURE2D(_MaskTex, sampler_MaskTex, i.uv);
                 SurfaceData2D surfaceData;
                 InputData2D inputData;
 
-               // if (toggle ==1
-
-                InitializeSurfaceData(main.rgb - toggle, main.a, mask, surfaceData);
+                InitializeSurfaceData(main.rgb, main.a, mask, surfaceData);
                 InitializeInputData(i.uv, i.lightingUV, inputData);
 
-                SETUP_DEBUG_TEXTURE_DATA_2D_NO_TS(inputData, i.positionWS, i.positionCS, _MainTex);
+                half R  =    sin(_Time.w *  3 + 4)   /4  +   0.7;
+                half G  =    sin(_Time.w)            /3  +   0.65;
+                half B  =    sin(_Time.w * 1.6)      /3  +   0.65;
 
+                half3 Rgb = (R * Glint.r,G * Glint.g,B * Glint.b);
+
+                //calcuations
+                if (toggle >=1) {
+                    Rgb = (R * Glint.r,G * Glint.g,B * Glint.b) * -1;
+                    }
+                    else {
+                         Rgb = (1,1,1);
+                        }
+
+
+
+                SETUP_DEBUG_TEXTURE_DATA_2D_NO_TS(inputData, i.positionWS, i.positionCS, _MainTex);
+                surfaceData.albedo.rgb = main.rgb + (Rgb.rgb);
                 return CombinedShapeLightShared(surfaceData, inputData);
             }
             ENDHLSL
@@ -290,10 +307,6 @@ Shader "Unlit/ItemEffect"
                     return debugColor;
                 }
                 #endif
-
-                /// using time time and time 
-
-
 
                 return mainTex;
             }
