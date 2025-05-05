@@ -4,6 +4,20 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
 
+public class Task
+{ 
+     //location
+     //time--
+     //duration
+     //goal
+     //reuierments
+     //interactions
+
+}
+
+
+
+
 public class NpcBehaviour : MonoBehaviour, NpcPathFinding
 {
     [Header("Debug")]
@@ -78,6 +92,11 @@ public class NpcBehaviour : MonoBehaviour, NpcPathFinding
         #endregion
 
 
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        //check if colliding with a interaction object and if that object is one the npc currently interacts with
     }
 
 }

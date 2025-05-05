@@ -17,7 +17,7 @@ public class Player_Interaction : MonoBehaviour
     void Update()
     {
         //input .getkeydown(interactionkey)
-        if (Input.GetKeyDown(core.interact))  {
+        if (Input.GetKeyDown(core.interact) && interactable.Count != 0)  {
             GameObject interaction = interactable[0];
             foreach (GameObject obj in interactable) {
                 //check distance
@@ -41,6 +41,7 @@ public class Player_Interaction : MonoBehaviour
             Interactable[] ie = collision.gameObject.GetComponents<Interactable>();
             //this item is interactable do the on enter function :3
             //open a menu like something
+            Debug.Log("interacabke");
             foreach (Interactable I in ie)
             {
                 Debug.Log(I);
