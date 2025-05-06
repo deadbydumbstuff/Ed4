@@ -232,7 +232,7 @@ public class Inventory_Manager : MonoBehaviour,InventoryIf,ItemInterface
         //Debug.Log(item.ItemType.itemFlavourText); //fancy text bellow the original description
         ToolTip.SetActive(true);
         ToolTip.transform.position = pos;
-        ToolText.text = ($"{item.ItemType.name} \n {item.ItemType.itemDescription}");
+        ToolText.text = ($"{item.ItemType.itemName} \n {item.ItemType.itemDescription}");
     }
     public void HideToolTip()
     {
@@ -298,6 +298,13 @@ public class Inventory_Manager : MonoBehaviour,InventoryIf,ItemInterface
                 IPM.gameObject.SetActive(false);
             }
         }
+        ToolTip.SetActive(false);
+    }
+    public void CloseInventoryINT(int Page)
+    {
+        ItemPage[Page].InventoryOpen= false;
+        ItemPage[Page].gameObject.SetActive(false);    
+        ToolTip.SetActive(false);
     }
     #region Trading
     //this will be for all the traiding functions

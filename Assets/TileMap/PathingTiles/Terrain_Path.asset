@@ -12,6 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 698779e8fb1829a4bbeea6cbcf76820f, type: 3}
   m_Name: Terrain_Path
   m_EditorClassIdentifier: 
-  tiles:
-  - {fileID: 11400000, guid: 32766aaa7f340304ebb8ead0e8372a6d, type: 2}
+  tiles: []
   type: 0
