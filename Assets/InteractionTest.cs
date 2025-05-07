@@ -3,7 +3,8 @@ using System.Collections.Generic;
 public class InteractionTest : MonoBehaviour,Interactable
 {
     Inventory_Manager inventory;
-    public List<InventoryIf.Item> InventoryTemp;
+    //public List<InventoryIf.Item> InventoryTemp;
+    public InventoryIf.Inventory Inventory;
     MaterialPropertyBlock MatProBlk;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -24,7 +25,7 @@ public class InteractionTest : MonoBehaviour,Interactable
     public void Interact()//when the plaer is interacted 
     {
         //just do whatever i want when interacted
-        inventory.OpenInventory(1, "Chest", InventoryTemp);
+        inventory.OpenInventory(1, "Chest", Inventory);
        // throw new System.NotImplementedException();
     }
 

@@ -13,8 +13,14 @@ public interface InventoryIf
         public ItemSObj ItemType;
         public uint Quantity;
     }
-
+    [System.Serializable]
+    public class Inventory
+    {
+        public Inventory_Page_Manager.InventoryType InventoryType;
+        public List<Item> Items;
+    }
 }
+
 public interface OnClick
 {
     public Inventory_ItemSlot OnItemClick();
@@ -76,10 +82,10 @@ public class Inventory_Manager : MonoBehaviour,InventoryIf,ItemInterface
     /// </summary>
     /// <param name="Inventory"></param>
     /// <returns></returns>
-    public List<InventoryIf.Item> OrganiseInventory(List<InventoryIf.Item> Inventory , ItemInterface.ItemType Type)
+    public List<InventoryIf.Item> OrganiseInventory(InventoryIf.Inventory Inventory , ItemInterface.ItemType Type)
     {
         List < InventoryIf.Item > returnList = new();
-        foreach(InventoryIf.Item Item in Inventory)
+        foreach(InventoryIf.Item Item in Inventory.Items)
         {
             if (Item.ItemType.type == Type)
             {
@@ -91,10 +97,10 @@ public class Inventory_Manager : MonoBehaviour,InventoryIf,ItemInterface
     /// <summary>
     /// adds an item to an inventory with a quantitys while also creating a new itemspace if its a new item
     /// </summary>
-    public void AddItem(List<InventoryIf.Item> Inventory, ItemSObj Item,uint Quantity,string Owner)
+    public void AddItem(InventoryIf.Inventory Inventory, ItemSObj Item,uint Quantity,string Owner)
     {
         //check the inventory for item
-        foreach (InventoryIf.Item item in Inventory)
+        foreach (InventoryIf.Item item in Inventory.Items)
         {
             if (item.ItemType == Item)
             {
@@ -103,13 +109,13 @@ public class Inventory_Manager : MonoBehaviour,InventoryIf,ItemInterface
                 return;
             }
         }
-        Inventory.Add(new InventoryIf.Item { ItemType = Item,Quantity = Quantity});
+        Inventory.Items.Add(new InventoryIf.Item { ItemType = Item,Quantity = Quantity});
         UpdateInventory(Inventory, Item, Owner);
     }
 
-    public void RemoveItem(List<InventoryIf.Item> Inventory, ItemSObj Item, uint Quantity,string Owner)
+    public void RemoveItem(InventoryIf.Inventory Inventory, ItemSObj Item, uint Quantity,string Owner)
     {
-        foreach (InventoryIf.Item item in Inventory)
+        foreach (InventoryIf.Item item in Inventory.Items)
         {
             if (item.ItemType == Item)
             {
@@ -120,11 +126,11 @@ public class Inventory_Manager : MonoBehaviour,InventoryIf,ItemInterface
                     {
                         if (Page.pageOwner == Owner)
                         {
-                            int i = Inventory.FindIndex(e => e.ItemType == Item);
+                            int i = Inventory.Items.FindIndex(e => e.ItemType == Item);
                             Page.itemSlots.transform.GetChild(i).GetComponent<Inventory_ItemSlot>().ClearSlot();
                         }
                     }
-                    Inventory.Remove(item);
+                    Inventory.Items.Remove(item);
                 }
                 else {
                     UpdateInventory(Inventory, Item, Owner);
@@ -134,7 +140,7 @@ public class Inventory_Manager : MonoBehaviour,InventoryIf,ItemInterface
         }
     }
 
-    public void UpdateInventory(List<InventoryIf.Item> Inventory, ItemSObj Item,string Owner)
+    public void UpdateInventory(InventoryIf.Inventory Inventory, ItemSObj Item,string Owner)
     {
         //find item in inventory and the page
         foreach(Inventory_Page_Manager Page in ItemPage)
@@ -142,9 +148,9 @@ public class Inventory_Manager : MonoBehaviour,InventoryIf,ItemInterface
             if (Page.pageOwner == Owner && Page.InventoryOpen) //add  check if inventory bool is open 
             {
                 //this mean their is a open inventory displaying this charcter inventory
-                int i= Inventory.FindIndex(e => e.ItemType == Item);
+                int i= Inventory.Items.FindIndex(e => e.ItemType == Item);
                 //Inventory[i]
-                if (Page.itemSlots.transform.childCount < Inventory.Count) //tomany items
+                if (Page.itemSlots.transform.childCount < Inventory.Items.Count) //tomany items
                 {
                     //if (!Page.fixedSlotCount) // page can have more items
                     //{
@@ -159,7 +165,7 @@ public class Inventory_Manager : MonoBehaviour,InventoryIf,ItemInterface
                         //return
                     //}
                 }
-                Page.itemSlots.transform.GetChild(i).GetComponent<Inventory_ItemSlot>().SetItem(Inventory[i]);
+                Page.itemSlots.transform.GetChild(i).GetComponent<Inventory_ItemSlot>().SetItem(Inventory.Items[i]);
                 //go to page with that index vaule and update it with the new vaules
             }
         }
@@ -186,12 +192,13 @@ public class Inventory_Manager : MonoBehaviour,InventoryIf,ItemInterface
     /// turn the list of objects in the players inventory into displayed items on a a page
     /// </summary>
     /// could incule a page owener mechanic :3 
-    public void GeneratePage(string inventoryOwner,List<InventoryIf.Item> Items,Inventory_Page_Manager IPM)
+    public void GeneratePage(string inventoryOwner,InventoryIf.Inventory Inventory,Inventory_Page_Manager IPM)
     {
         int i = 0;
         IPM.UpdatePage(inventoryOwner);
         IPM.RescaleItemZone();
-        foreach (InventoryIf.Item ItemSlot in Items)
+        IPM.inventoryType = Inventory.InventoryType;
+        foreach (InventoryIf.Item ItemSlot in Inventory.Items)
         {
             Transform Child = IPM.itemSlots.transform.GetChild(i);
             if (Child != null)
@@ -244,32 +251,38 @@ public class Inventory_Manager : MonoBehaviour,InventoryIf,ItemInterface
     /// <param name="item"></param> the item selected
     /// //the inventory it belongs 2
     /// deciper the state/type of the inventory 
-    public void InspectItem(InventoryIf.Item item, Inventory_Page_Manager iPM,string PageOwner)
+    public void InspectItem(InventoryIf.Item Inventory,Inventory_Page_Manager IMP)
     {
         //get the postion of the item slo
 
-
-        //check the other pages
-        foreach (Inventory_Page_Manager ipm in ItemPage)
+        switch (IMP.inventoryType)
         {
-            if (ipm == iPM) { break; }
-            // check the state of this inventory and if open
-            switch (ipm.inventoryType)
-            {
-                case Inventory_Page_Manager.InventoryType.PlayerInventory:
-                    //
-                    break;
-                case Inventory_Page_Manager.InventoryType.Trade:
-                    //
-                    break;
-            }
-
-
+            case Inventory_Page_Manager.InventoryType.PlayerInventory:
+                Debug.Log("I own this");
+                break;
+            case Inventory_Page_Manager.InventoryType.Trade:
+                Debug.Log("I DO NOT own this");
+                break;
         }
+        //check the other pages //cgecling contrat cfomr other pagesd 
+        /*foreach (Inventory_Page_Manager ipm in ItemPage)
+        {
+            if (ipm.InventoryOpen == false || ipm == IMP) { break; }
+            // check the state of this inventory and if open
+            //idk why i have this  but its to tell what type of inventory;page and what other pages are their i need to add options such as sell/trade/deposit/
+
+
+        }*/
+        //depending on the posion of the itemslot/page open  the inspecion pannel on a diffrent side of the screen so its readable
+
+        //toggle on and off options depending on the stuff
+        //pass in the item and the pages that are active onto the 
+        //caculate the sell prices of buiying
+        //just toggle stuff move object 
 
     }
 
-    public void OpenInventory(int Page, string inventoryOwner, List<InventoryIf.Item> Items)
+    public void OpenInventory(int Page, string inventoryOwner, InventoryIf.Inventory Inventory)
     {
         //selected the page 
         //get the IMP FROM THE page use that for the gen page scriot
@@ -284,7 +297,7 @@ public class Inventory_Manager : MonoBehaviour,InventoryIf,ItemInterface
         }
         IPM.InventoryOpen = true;
         IPM.gameObject.SetActive(true);
-        GeneratePage(inventoryOwner, Items, IPM);
+        GeneratePage(inventoryOwner, Inventory, IPM);
         //open the gameobjects/setactive
         //generatepage
     }

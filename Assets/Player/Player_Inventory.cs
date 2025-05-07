@@ -11,7 +11,7 @@ public class Player_Inventory : MonoBehaviour,InventoryIf
 
     [Header("Core")]
     public Player_Core Core;
-    public List<InventoryIf.Item> inventory = new();
+    public InventoryIf.Inventory inventory = new();
     public KeyCode inventoryKey;
     [SerializeField] Inventory_Manager inventory_Manager;
 
@@ -53,8 +53,8 @@ public class Player_Inventory : MonoBehaviour,InventoryIf
     }
     public void Debug_RemoveItem()
     {
-        if (inventory.Count <= 0) { Debug.Log("no items"); return; }
-        inventory_Manager.RemoveItem(inventory, inventory.Last().ItemType, 1, Core.name);
+        if (inventory.Items.Count <= 0) { Debug.Log("no items"); return; }
+        inventory_Manager.RemoveItem(inventory, inventory.Items.Last().ItemType, 1, Core.name);
     }
     /// <summary>
     /// debugs out an entier inventory
