@@ -253,26 +253,76 @@ public class Inventory_Manager : MonoBehaviour,InventoryIf,ItemInterface
     /// deciper the state/type of the inventory 
     public void InspectItem(InventoryIf.Item Inventory,Inventory_Page_Manager IMP)
     {
+        bool inv1 = false;
+        bool inv2 = false;
+        bool singleInv = false;
         //get the postion of the item slo
-
+        // the type of inventory interacting with
         switch (IMP.inventoryType)
         {
             case Inventory_Page_Manager.InventoryType.PlayerInventory:
-                Debug.Log("I own this");
+                inv1 = true;
                 break;
             case Inventory_Page_Manager.InventoryType.Trade:
-                Debug.Log("I DO NOT own this");
+                inv1 = false;
                 break;
         }
-        //check the other pages //cgecling contrat cfomr other pagesd 
-        /*foreach (Inventory_Page_Manager ipm in ItemPage)
+        //the other open inventory
+        foreach (Inventory_Page_Manager ipm in ItemPage)
         {
-            if (ipm.InventoryOpen == false || ipm == IMP) { break; }
-            // check the state of this inventory and if open
-            //idk why i have this  but its to tell what type of inventory;page and what other pages are their i need to add options such as sell/trade/deposit/
+            if (ipm.InventoryOpen|| ipm != IMP)
+            {
+                // check the state of this inventory and if open
+                singleInv = true;
+                //idk why i have this  but its to tell what type of inventory;page and what other pages are their i need to add options such as sell/trade/deposit/
+                switch (ipm.inventoryType)
+                {
+                    case Inventory_Page_Manager.InventoryType.PlayerInventory:
+                        inv2 = true;
+                        // if i own the first one 2 its a swap
+                        //trade
+                        break;
+                    case Inventory_Page_Manager.InventoryType.Trade:
+                        inv2 = false;
+                        //if i own the first one its a trade
+                        //own
+                        break;
+                }
+            }
+        }
 
+        if (!singleInv)
+        {
+            Debug.Log("True Inspect + drop");
+            if (inv1)
+            {
+                //i own so drop
+                Debug.Log("Own");
+            }
+            else
+            {
+                // i do not own
+                Debug.Log("no own");
+            }
+        }
+        else if (inv1 && inv2) // i own both inventorys
+        {
+            //swap items //drop
+            Debug.Log("swapdrop");
+        }
+        else if (inv1 && !inv2) //i own this inventory but not the other
+        {
+            //drop // sell
+            Debug.Log("drop sell");
+        }
+        else if (!inv1 && inv2) // i dont own this inventory but i own thge other one
+        {
+            //buy
+            Debug.Log("buy");
+        }
+        //if no other inventory is open
+        
 
-        }*/
         //depending on the posion of the itemslot/page open  the inspecion pannel on a diffrent side of the screen so its readable
 
         //toggle on and off options depending on the stuff
