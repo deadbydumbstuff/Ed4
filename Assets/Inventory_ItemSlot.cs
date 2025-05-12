@@ -45,10 +45,11 @@ public class Inventory_ItemSlot : MonoBehaviour,InventoryIf,OnClick
     public Inventory_ItemSlot OnItemClick()
     {
         //selected the item and set a bool in the inv manager 
+        Im.HideToolTip();
+        Im.InspectMenu.SetActive(false);
         GetComponent<Image>().color = SelectedColour;
-        if (item != null)
+        if (item.Quantity > 0)
         {
-            Im.HideToolTip();
             StopCoroutine(ShowToolTip());
             Im.InspectItem(item, IPM, transform.position);
         }

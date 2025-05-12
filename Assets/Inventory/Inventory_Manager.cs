@@ -37,7 +37,7 @@ public class Inventory_Manager : MonoBehaviour,InventoryIf,ItemInterface
 
     public GameObject ToolTip;
     [SerializeField] TMP_Text ToolText;//could move this to the tooltip function instead might be redunended
-    [SerializeField] GameObject InspectMenu;
+    public GameObject InspectMenu;
     public List<Inventory_Page_Manager> ItemPage;
 
     public GameObject itemSlotPrefab;
@@ -71,6 +71,7 @@ public class Inventory_Manager : MonoBehaviour,InventoryIf,ItemInterface
             }
         }
         HideToolTip();
+        InspectMenu.gameObject.SetActive(false);
         if (selectedItem != null)
         {
             selectedItem.Deselected();
