@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine.EventSystems;
 using System.Collections;
 using TMPro;
+using Unity.VisualScripting;
 
 public interface InventoryIf
 {
@@ -192,9 +193,11 @@ public class Inventory_Manager : MonoBehaviour,InventoryIf,ItemInterface
     /// turn the list of objects in the players inventory into displayed items on a a page
     /// </summary>
     /// could incule a page owener mechanic :3 
-    public void GeneratePage(string inventoryOwner,InventoryIf.Inventory Inventory,Inventory_Page_Manager IPM)
+    public void GeneratePage(string inventoryOwner, InventoryIf.Inventory Inventory, Inventory_Page_Manager IPM)
+
     {
         int i = 0;
+        InspectMenu.SetActive(false);
         IPM.UpdatePage(inventoryOwner);
         IPM.RescaleItemZone();
         IPM.inventoryType = Inventory.InventoryType;
@@ -221,6 +224,12 @@ public class Inventory_Manager : MonoBehaviour,InventoryIf,ItemInterface
                 //set
             }
             i++;
+        }
+        //after each loop i goes up then use the reming item slots in the diplayed inventiry and clear them 
+        for (int o = 0; o <= Inventory.Items.Count - i; o++)
+            {
+            IPM.itemSlots.transform.GetChild(i + o).GetComponent<Inventory_ItemSlot>().ClearSlot();
+            
         }
     }
 
@@ -251,8 +260,9 @@ public class Inventory_Manager : MonoBehaviour,InventoryIf,ItemInterface
     /// <param name="item"></param> the item selected
     /// //the inventory it belongs 2
     /// deciper the state/type of the inventory 
-    public void InspectItem(InventoryIf.Item Inventory,Inventory_Page_Manager IMP)
+    public void InspectItem(InventoryIf.Item Inventory,Inventory_Page_Manager IMP,Vector2 ItemSlotPos)
     {
+        ToolTip.SetActive(false);
         bool inv1 = false;
         bool inv2 = false;
         bool singleInv = false;
@@ -270,10 +280,12 @@ public class Inventory_Manager : MonoBehaviour,InventoryIf,ItemInterface
         //the other open inventory
         foreach (Inventory_Page_Manager ipm in ItemPage)
         {
-            if (ipm.InventoryOpen|| ipm != IMP)
+            bool stop = false;
+            if ( (ipm.InventoryOpen|| ipm != IMP ) && !stop)
             {
                 // check the state of this inventory and if open
                 singleInv = true;
+                stop = true;
                 //idk why i have this  but its to tell what type of inventory;page and what other pages are their i need to add options such as sell/trade/deposit/
                 switch (ipm.inventoryType)
                 {
@@ -321,7 +333,7 @@ public class Inventory_Manager : MonoBehaviour,InventoryIf,ItemInterface
             Debug.Log("buy");
         }
         //if no other inventory is open
-        
+
 
         //depending on the posion of the itemslot/page open  the inspecion pannel on a diffrent side of the screen so its readable
 
@@ -329,7 +341,7 @@ public class Inventory_Manager : MonoBehaviour,InventoryIf,ItemInterface
         //pass in the item and the pages that are active onto the 
         //caculate the sell prices of buiying
         //just toggle stuff move object 
-
+        InspectMenu.GetComponent<InspectItem>().Open(ItemSlotPos);
     }
 
     public void OpenInventory(int Page, string inventoryOwner, InventoryIf.Inventory Inventory)

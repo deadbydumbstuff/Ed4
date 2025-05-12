@@ -46,9 +46,12 @@ public class Inventory_ItemSlot : MonoBehaviour,InventoryIf,OnClick
     {
         //selected the item and set a bool in the inv manager 
         GetComponent<Image>().color = SelectedColour;
-        Im.HideToolTip();
-        StopCoroutine(ShowToolTip());
-        Im.InspectItem(item,IPM);
+        if (item != null)
+        {
+            Im.HideToolTip();
+            StopCoroutine(ShowToolTip());
+            Im.InspectItem(item, IPM, transform.position);
+        }
         //show the item options
         //  drop/Buy
         //  open inspection menu and check what type of inventory it its rn // selling // chest // player inventory // what the other types of inventory are 
