@@ -55,14 +55,16 @@ public class Inventory_Manager : MonoBehaviour,InventoryIf,ItemInterface
         PED.position = Input.mousePosition;
         List<RaycastResult> RR = new List<RaycastResult>();
         EventSystem.current.RaycastAll(PED, RR);
-
+        bool hit = false; ;
         for (int i = 0; i < RR.Count; i++)
         {
             if (RR[i].gameObject.GetComponent<OnClick>() != null)
             {
+                hit = true;
                 if (selectedItem != null)
                 {
                     selectedItem.Deselected();
+                   // InspectMenu.gameObject.SetActive(false);
                 }
                 selectedItem = RR[i].gameObject.GetComponent<OnClick>().OnItemClick();
                 //start the hold timer if the mouse is still down after the timer its a hold else do click stuff
@@ -70,8 +72,12 @@ public class Inventory_Manager : MonoBehaviour,InventoryIf,ItemInterface
                 return;
             }
         }
+        if (!hit)
+        {
+            InspectMenu.gameObject.SetActive(false);
+        }
         HideToolTip();
-        InspectMenu.gameObject.SetActive(false);
+       // InspectMenu.gameObject.SetActive(false);
         if (selectedItem != null)
         {
             selectedItem.Deselected();
@@ -387,18 +393,19 @@ public class Inventory_Manager : MonoBehaviour,InventoryIf,ItemInterface
     /// <summary>
     /// take 2 inventorys exchange items, (inventory, item), (inventory,item)
     /// </summary>
-    void ExampleTradeFunc()
+    void ExampleTradeFunc(InventoryIf.Item item,int quantity)
     {
         //get the 2 player ineventory create a 
+        //do the things what them vaues
     }
 
     //inventory gives item gets gold , gets item gives gold
-    void Sell()
+    public void Sell(InventoryIf.Item item, int quantity)
     {
 
     }
     //i1 loses gold gets item, i2 loses item gets gold 
-    void Buy()
+    public void Buy(InventoryIf.Item item, int quantity)
     {
 
     }
