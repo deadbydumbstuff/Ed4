@@ -288,7 +288,7 @@ public class Inventory_Manager : MonoBehaviour,InventoryIf,ItemInterface
         foreach (Inventory_Page_Manager ipm in ItemPage)
         {
             bool stop = false;
-            if ( (ipm.InventoryOpen|| ipm != IMP ) && !stop)
+            if ( (ipm.InventoryOpen && ipm != IMP ) && !stop)
             {
                 // check the state of this inventory and if open
                 singleInv = true;
@@ -309,6 +309,13 @@ public class Inventory_Manager : MonoBehaviour,InventoryIf,ItemInterface
                 }
             }
         }
+        // Debug.Log(singleInv);
+
+        //create the bools
+        bool Own;
+        bool trade;
+        bool OwnOther;
+        bool space; // need to calcualte this one
 
         if (!singleInv)
         {
@@ -349,6 +356,7 @@ public class Inventory_Manager : MonoBehaviour,InventoryIf,ItemInterface
         //caculate the sell prices of buiying
         //just toggle stuff move object 
         InspectMenu.GetComponent<InspectItem>().Open(ItemSlotPos);
+        InspectMenu.GetComponent<InspectItem>().Toggles(inv1,singleInv,inv2,true,true);
     }
 
     public void OpenInventory(int Page, string inventoryOwner, InventoryIf.Inventory Inventory)
