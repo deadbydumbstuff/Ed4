@@ -393,19 +393,19 @@ public class Inventory_Manager : MonoBehaviour,InventoryIf,ItemInterface
     /// <summary>
     /// take 2 inventorys exchange items, (inventory, item), (inventory,item)
     /// </summary>
-    void ExampleTradeFunc(InventoryIf.Item item,int quantity)
+    void ExampleTradeFunc()
     {
         //get the 2 player ineventory create a 
         //do the things what them vaues
     }
 
     //inventory gives item gets gold , gets item gives gold
-    public void Sell(InventoryIf.Item item, int quantity)
+    public void Sell()
     {
 
     }
     //i1 loses gold gets item, i2 loses item gets gold 
-    public void Buy(InventoryIf.Item item, int quantity)
+    public void Buy()
     {
 
     }
