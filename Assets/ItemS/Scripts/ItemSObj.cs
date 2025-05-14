@@ -16,4 +16,5 @@ public class ItemSObj : ScriptableObject,ItemInterface
     public bool ingredient;
     public bool equiable;
     public bool stackable;
+    public bool notTradeable;
 }

@@ -14,10 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Stone
   itemDescription: 'a pile of lose rocks '
-  itemFlavourText: 
+  itemFlavourText: rock solid
   baseCost: 0
   itemIcon: {fileID: -2182124076254010665, guid: f545b0c745176454e88c1fbdb07ed307, type: 3}
   type: 0
   ingredient: 0
   equiable: 0
   stackable: 0
+  notTradeable: 0

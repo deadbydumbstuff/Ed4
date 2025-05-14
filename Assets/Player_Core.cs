@@ -11,6 +11,7 @@ public class Player_Core : MonoBehaviour
 {
     [Header("Core")]
     public string Name;
+    public float Gold;
     //what other information does the player contain
 
     [Header("Movement")]

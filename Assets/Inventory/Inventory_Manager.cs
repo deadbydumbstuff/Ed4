@@ -39,8 +39,9 @@ public class Inventory_Manager : MonoBehaviour,InventoryIf,ItemInterface
     [SerializeField] TMP_Text ToolText;//could move this to the tooltip function instead might be redunended
     public GameObject InspectMenu;
     public List<Inventory_Page_Manager> ItemPage;
-
+    [SerializeField] Inventory_Page_Manager InspectedPage;
     public GameObject itemSlotPrefab;
+
     void Update()
     {
         //on mouse click
@@ -270,6 +271,7 @@ public class Inventory_Manager : MonoBehaviour,InventoryIf,ItemInterface
     public void InspectItem(InventoryIf.Item Inventory,Inventory_Page_Manager IMP,Vector2 ItemSlotPos)
     {
         ToolTip.SetActive(false);
+        InspectedPage = IMP;
         bool inv1 = false;
         bool inv2 = false;
         bool singleInv = false;
@@ -284,6 +286,7 @@ public class Inventory_Manager : MonoBehaviour,InventoryIf,ItemInterface
                 inv1 = false;
                 break;
         }
+        bool space = false;
         //the other open inventory
         foreach (Inventory_Page_Manager ipm in ItemPage)
         {
@@ -307,46 +310,20 @@ public class Inventory_Manager : MonoBehaviour,InventoryIf,ItemInterface
                         //own
                         break;
                 }
+                //space
+                //get the inventor that oage owns
+                if (ipm.itemSlots.GetChild(ipm.itemSlots.GetChildCount() - 1).GetComponent<Inventory_ItemSlot>().item != null)
+                {
+                    space = true;
+                }
             }
+            
         }
         // Debug.Log(singleInv);
-
+       
         //create the bools
-        bool Own;
         bool trade;
-        bool OwnOther;
-        bool space; // need to calcualte this one
-
-        if (!singleInv)
-        {
-            Debug.Log("True Inspect + drop");
-            if (inv1)
-            {
-                //i own so drop
-                Debug.Log("Own");
-            }
-            else
-            {
-                // i do not own
-                Debug.Log("no own");
-            }
-        }
-        else if (inv1 && inv2) // i own both inventorys
-        {
-            //swap items //drop
-            Debug.Log("swapdrop");
-        }
-        else if (inv1 && !inv2) //i own this inventory but not the other
-        {
-            //drop // sell
-            Debug.Log("drop sell");
-        }
-        else if (!inv1 && inv2) // i dont own this inventory but i own thge other one
-        {
-            //buy
-            Debug.Log("buy");
-        }
-        //if no other inventory is open
+        bool tradeable = !Inventory.ItemType.notTradeable;
 
 
         //depending on the posion of the itemslot/page open  the inspecion pannel on a diffrent side of the screen so its readable
@@ -356,7 +333,9 @@ public class Inventory_Manager : MonoBehaviour,InventoryIf,ItemInterface
         //caculate the sell prices of buiying
         //just toggle stuff move object 
         InspectMenu.GetComponent<InspectItem>().Open(ItemSlotPos);
-        InspectMenu.GetComponent<InspectItem>().Toggles(inv1,singleInv,inv2,true,true);
+        InspectMenu.GetComponent<InspectItem>().Toggles(inv1,singleInv,inv2,space,inv2,tradeable);
+        InspectMenu.GetComponent<InspectItem>().UpdateFlavourText(Inventory.ItemType.itemFlavourText);
+        InspectMenu.GetComponent<InspectItem>().SetBuySellQuantitiys(Inventory.Quantity);
     }
 
     public void OpenInventory(int Page, string inventoryOwner, InventoryIf.Inventory Inventory)
@@ -375,8 +354,19 @@ public class Inventory_Manager : MonoBehaviour,InventoryIf,ItemInterface
         IPM.InventoryOpen = true;
         IPM.gameObject.SetActive(true);
         GeneratePage(inventoryOwner, Inventory, IPM);
-        //open the gameobjects/setactive
-        //generatepage
+
+        //updae the inspection pannel unless it override the current pannel
+        if (InspectedPage != null && IPM == InspectedPage)
+        {
+            //overiding the current
+            Debug.Log("ovverride");
+            //hide
+        }
+        else
+        {
+            //update the invetory
+            Debug.Log("underride");
+        }
     }
     public void CloseInventory(string inventoryOwner)
     {
@@ -389,34 +379,47 @@ public class Inventory_Manager : MonoBehaviour,InventoryIf,ItemInterface
             }
         }
         ToolTip.SetActive(false);
+       // RefreshInspectMenu();
+
+        if ( InspectedPage != null && inventoryOwner == InspectedPage.pageOwner)
+        {
+            InspectMenu.gameObject.SetActive(false);
+            Debug.Log("meow");
+        }
+        else
+        {
+            RefreshInspectMenu();
+        }
     }
     public void CloseInventoryINT(int Page)
     {
         ItemPage[Page].InventoryOpen= false;
         ItemPage[Page].gameObject.SetActive(false);    
         ToolTip.SetActive(false);
-    }
-    #region Trading
-    //this will be for all the traiding functions
-    /// <summary>
-    /// take 2 inventorys exchange items, (inventory, item), (inventory,item)
-    /// </summary>
-    void ExampleTradeFunc()
-    {
-        //get the 2 player ineventory create a 
-        //do the things what them vaues
+        //refresh.update thee inspection menu 
+        if (InspectedPage != null && ItemPage[Page] != InspectedPage)
+        {
+            InspectedPage.gameObject.SetActive(false);
+        }
+        else
+        {
+            RefreshInspectMenu();
+        }
     }
 
-    //inventory gives item gets gold , gets item gives gold
-    public void Sell()
+    void RefreshInspectMenu()
     {
-
+        //check what pages are open and redo it
+        Debug.Log("test");
+        //if inventory is the ond the inspect pannle is on then close the inspec pann
     }
-    //i1 loses gold gets item, i2 loses item gets gold 
-    public void Buy()
-    {
 
+    #region TRADING
+    public void Swap(InventoryIf.Inventory reciver, InventoryIf.Inventory giver,InventoryIf.Item item)
+    {
+        RemoveItem(giver,item.ItemType,item.Quantity)
     }
     #endregion
+
 
 }

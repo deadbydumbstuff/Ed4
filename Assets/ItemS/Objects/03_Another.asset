@@ -21,3 +21,4 @@ MonoBehaviour:
   ingredient: 0
   equiable: 0
   stackable: 0
+  notTradeable: 1
