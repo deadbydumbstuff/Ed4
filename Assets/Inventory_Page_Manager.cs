@@ -8,6 +8,7 @@ public class Inventory_Page_Manager : MonoBehaviour
     //other ui
     public bool InventoryOpen;
     [SerializeField] ScaleWithGridLayout swgl;
+    public GameObject InvSource; //store the origins gameobject of the inventory so i can then find component and get back that inventory
     public InventoryType inventoryType;
     public enum InventoryType
     {

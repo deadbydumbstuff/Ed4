@@ -10,8 +10,13 @@ public class Inventory_Container : MonoBehaviour,InventoryIf
     //controll the amount of items 
     //allow the player to move and pick up items from them
 
-    public List<InventoryIf.Item> Inventory;
+    public InventoryIf.Inventory Inventory;
     Inventory_Manager inventory_manager;
+
+    public InventoryIf.Inventory returnOwner()
+    {
+        return Inventory;
+    }
 
     void start()
     {

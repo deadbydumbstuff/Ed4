@@ -17,6 +17,10 @@ public class InspectItem : MonoBehaviour
     [SerializeField] TMP_Text textbox;
     [SerializeField] Slider Slider;
 
+    private Inventory_Manager IM;
+    [SerializeField] private InventoryIf.Item inspecteditem;
+    private Inventory_Page_Manager inspectPage;
+    //[SerializeField] InventoryIf.Item selectedItem;
     //THIS SCIPT change the active options on the inspection menu each of the buttons
     //depending on the type of inventory add diffrent options 
 
@@ -26,7 +30,10 @@ public class InspectItem : MonoBehaviour
     //          drop with scale
     //          if the other inventory is buying and selling
     //                     sell item
-
+    private void Start()
+    {
+        IM = GameObject.FindGameObjectWithTag("GlobalManager").GetComponent<Inventory_Manager>();
+    }
     /// <summary>
     /// 
     /// </summary>
@@ -66,7 +73,7 @@ public class InspectItem : MonoBehaviour
             //drop
             Drop.gameObject.SetActive(true);
         }
-        else if(Trade && TradableItem) //dont own can trade
+        else if(!Trade && TradableItem) //dont own can trade
         {
             Buy.gameObject.SetActive(true);
             SliderGobj.gameObject.SetActive(true);
@@ -94,9 +101,11 @@ public class InspectItem : MonoBehaviour
         }
     }
 
-    public void UpdateFlavourText(string itemFlavourText)
+    public void UpdateStuff(InventoryIf.Item item,Inventory_Page_Manager Ipm)
     {
-        textbox.text = itemFlavourText;
+        textbox.text = item.ItemType.itemFlavourText;
+        inspecteditem = item;
+        inspectPage = Ipm;
     }
     public void SetBuySellQuantitiys(uint Quantity)
     {
@@ -120,4 +129,19 @@ public class InspectItem : MonoBehaviour
         Slider.maxValue = Slider.maxValue - Slider.value;
     }
 
+
+    public void DropButton()
+    {
+        //GameObject.FindGameObjectWithTag("GlobalManager").GetComponent<Inventory_Manager>().Drop()
+        Debug.Log("Click");
+        IM.Drop(inspectPage.InvSource.GetComponent<InventoryIf>().returnOwner(),inspecteditem ,new Vector2 (0, 0));;
+    }
+    void SellButton()
+    {
+
+    }
+    void BuyButton()
+    {
+
+    }
 }

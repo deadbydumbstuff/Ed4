@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
-public class InteractionTest : MonoBehaviour,Interactable
+public class InteractionTest : MonoBehaviour,Interactable,InventoryIf
 {
     Inventory_Manager inventory;
     //public List<InventoryIf.Item> InventoryTemp;
@@ -25,7 +25,7 @@ public class InteractionTest : MonoBehaviour,Interactable
     public void Interact()//when the plaer is interacted 
     {
         //just do whatever i want when interacted
-        inventory.OpenInventory(1, "Chest", Inventory);
+        inventory.OpenInventory(1, Inventory,this.gameObject);
        // throw new System.NotImplementedException();
     }
 
@@ -42,7 +42,7 @@ public class InteractionTest : MonoBehaviour,Interactable
 
     public void ExitRange()
     {
-        inventory.CloseInventory("Chest");
+        inventory.CloseInventory(Inventory.invName);
         MatProBlk.SetFloat("toggle", 0);
         GetComponent<SpriteRenderer>().SetPropertyBlock(MatProBlk);
         //throw new System.NotImplementedException();
@@ -63,5 +63,10 @@ public class InteractionTest : MonoBehaviour,Interactable
         MatProBlk = new();
         MatProBlk.SetTexture("main", GetComponent<SpriteRenderer>().sprite.texture);
         GetComponent<SpriteRenderer>().SetPropertyBlock(MatProBlk);
+    }
+
+    public InventoryIf.Inventory returnOwner()
+    {
+        return Inventory;
     }
 }

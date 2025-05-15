@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 
-public class Player_Inventory : MonoBehaviour,InventoryIf
+public class Player_Inventory : MonoBehaviour, InventoryIf
 {
     [Header("Debug")]
     [SerializeField]KeyCode SpawnItem;
@@ -25,7 +25,7 @@ public class Player_Inventory : MonoBehaviour,InventoryIf
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        inventory_Manager.GeneratePage(Core.name, inventory, inventory_Manager.ItemPage[0]);
+        inventory_Manager.GeneratePage(inventory, inventory_Manager.ItemPage[0],this.gameObject);
     }
 
     // Update is called once per frame
@@ -64,7 +64,12 @@ public class Player_Inventory : MonoBehaviour,InventoryIf
         //open inventoryu function pass in the relevent information and displat
         //the set invenotry two true 
         // if inventory open then close it instead :3 (disable inventory and change bool and set type)
-        inventory_Manager.OpenInventory(0, Core.name, inventory);
+        inventory_Manager.OpenInventory(0, inventory,this.gameObject);
+    }
+
+    public InventoryIf.Inventory returnOwner()
+    {
+        return inventory;
     }
     #endregion
 }

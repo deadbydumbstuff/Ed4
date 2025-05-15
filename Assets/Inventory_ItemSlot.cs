@@ -87,4 +87,8 @@ public class Inventory_ItemSlot : MonoBehaviour,InventoryIf,OnClick
         Im.RenderToolTip(item, transform.position);
     }
 
+    public InventoryIf.Inventory returnOwner()
+    {
+        return null;
+    }
 }

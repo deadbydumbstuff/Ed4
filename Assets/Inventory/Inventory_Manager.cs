@@ -5,6 +5,7 @@ using UnityEngine.EventSystems;
 using System.Collections;
 using TMPro;
 using Unity.VisualScripting;
+using static Unity.VisualScripting.Member;
 
 public interface InventoryIf
 {
@@ -21,6 +22,8 @@ public interface InventoryIf
         public Inventory_Page_Manager.InventoryType InventoryType;
         public List<Item> Items;
     }
+
+    public InventoryIf.Inventory returnOwner();
 }
 
 public interface OnClick
@@ -30,7 +33,7 @@ public interface OnClick
 
 
 
-public class Inventory_Manager : MonoBehaviour,InventoryIf,ItemInterface
+public class Inventory_Manager : MonoBehaviour, InventoryIf, ItemInterface
 {
     //meowmeow hold item
     public Inventory_ItemSlot selectedItem;//move this to the inventory selected
@@ -40,15 +43,16 @@ public class Inventory_Manager : MonoBehaviour,InventoryIf,ItemInterface
     [SerializeField] TMP_Text ToolText;//could move this to the tooltip function instead might be redunended
     public GameObject InspectMenu;
     public List<Inventory_Page_Manager> ItemPage;
-    [SerializeField] Inventory_Page_Manager InspectedPage;
+    public Inventory_Page_Manager InspectedPage;
     public GameObject itemSlotPrefab;
+    public GameObject Item_Entity;
 
     void Update()
     {
         //on mouse click
         if (Input.GetMouseButtonDown(0)) { ClickCheck(); };
 
-     
+
     }
     void ClickCheck()
     {
@@ -66,7 +70,7 @@ public class Inventory_Manager : MonoBehaviour,InventoryIf,ItemInterface
                 if (selectedItem != null)
                 {
                     selectedItem.Deselected();
-                   // InspectMenu.gameObject.SetActive(false);
+                    // InspectMenu.gameObject.SetActive(false);
                 }
                 selectedItem = RR[i].gameObject.GetComponent<OnClick>().OnItemClick();
                 //start the hold timer if the mouse is still down after the timer its a hold else do click stuff
@@ -79,7 +83,7 @@ public class Inventory_Manager : MonoBehaviour,InventoryIf,ItemInterface
             InspectMenu.gameObject.SetActive(false);
         }
         HideToolTip();
-       // InspectMenu.gameObject.SetActive(false);
+        // InspectMenu.gameObject.SetActive(false);
         if (selectedItem != null)
         {
             selectedItem.Deselected();
@@ -92,10 +96,10 @@ public class Inventory_Manager : MonoBehaviour,InventoryIf,ItemInterface
     /// </summary>
     /// <param name="Inventory"></param>
     /// <returns></returns>
-    public List<InventoryIf.Item> OrganiseInventory(InventoryIf.Inventory Inventory , ItemInterface.ItemType Type)
+    public List<InventoryIf.Item> OrganiseInventory(InventoryIf.Inventory Inventory, ItemInterface.ItemType Type)
     {
-        List < InventoryIf.Item > returnList = new();
-        foreach(InventoryIf.Item Item in Inventory.Items)
+        List<InventoryIf.Item> returnList = new();
+        foreach (InventoryIf.Item Item in Inventory.Items)
         {
             if (Item.ItemType.type == Type)
             {
@@ -107,7 +111,7 @@ public class Inventory_Manager : MonoBehaviour,InventoryIf,ItemInterface
     /// <summary>
     /// adds an item to an inventory with a quantitys while also creating a new itemspace if its a new item
     /// </summary>
-    public void AddItem(InventoryIf.Inventory Inventory, ItemSObj Item,uint Quantity)
+    public void AddItem(InventoryIf.Inventory Inventory, ItemSObj Item, uint Quantity)
     {
         //check the inventory for item
         foreach (InventoryIf.Item item in Inventory.Items)
@@ -119,7 +123,7 @@ public class Inventory_Manager : MonoBehaviour,InventoryIf,ItemInterface
                 return;
             }
         }
-        Inventory.Items.Add(new InventoryIf.Item { ItemType = Item,Quantity = Quantity});
+        Inventory.Items.Add(new InventoryIf.Item { ItemType = Item, Quantity = Quantity });
         UpdateInventory(Inventory, Item);
     }
 
@@ -145,7 +149,7 @@ public class Inventory_Manager : MonoBehaviour,InventoryIf,ItemInterface
                 else {
                     UpdateInventory(Inventory, Item);
                 }
-                break;      
+                break;
             }
         }
     }
@@ -153,26 +157,26 @@ public class Inventory_Manager : MonoBehaviour,InventoryIf,ItemInterface
     public void UpdateInventory(InventoryIf.Inventory Inventory, ItemSObj Item)
     {
         //find item in inventory and the page
-        foreach(Inventory_Page_Manager Page in ItemPage)
+        foreach (Inventory_Page_Manager Page in ItemPage)
         {
             if (Page.pageOwner == Inventory.invName && Page.InventoryOpen) //add  check if inventory bool is open 
             {
                 //this mean their is a open inventory displaying this charcter inventory
-                int i= Inventory.Items.FindIndex(e => e.ItemType == Item);
+                int i = Inventory.Items.FindIndex(e => e.ItemType == Item);
                 //Inventory[i]
                 if (Page.itemSlots.transform.childCount < Inventory.Items.Count) //tomany items
                 {
                     //if (!Page.fixedSlotCount) // page can have more items
                     //{
-                        GameObject temp = Instantiate(itemSlotPrefab);
-                        temp.transform.SetParent(Page.itemSlots.transform);
-                        Page.RescaleItemZone();
+                    GameObject temp = Instantiate(itemSlotPrefab);
+                    temp.transform.SetParent(Page.itemSlots.transform);
+                    Page.RescaleItemZone();
                     //}
                     //else // page cant have more item so either return to original inventory or drop on the ground
                     //{
-                    
-                        //dropitem(item,quantity) create a item on the ground and stuff :3
-                        //return
+
+                    //dropitem(item,quantity) create a item on the ground and stuff :3
+                    //return
                     //}
                 }
                 Page.itemSlots.transform.GetChild(i).GetComponent<Inventory_ItemSlot>().SetItem(Inventory.Items[i]);
@@ -202,12 +206,13 @@ public class Inventory_Manager : MonoBehaviour,InventoryIf,ItemInterface
     /// turn the list of objects in the players inventory into displayed items on a a page
     /// </summary>
     /// could incule a page owener mechanic :3 
-    public void GeneratePage(string inventoryOwner, InventoryIf.Inventory Inventory, Inventory_Page_Manager IPM)
+    public void GeneratePage(InventoryIf.Inventory Inventory, Inventory_Page_Manager IPM,GameObject Source)
 
     {
+        IPM.InvSource = Source;
         int i = 0;
         InspectMenu.SetActive(false);
-        IPM.UpdatePage(inventoryOwner);
+        IPM.UpdatePage(Inventory.invName);
         IPM.RescaleItemZone();
         IPM.inventoryType = Inventory.InventoryType;
         foreach (InventoryIf.Item ItemSlot in Inventory.Items)
@@ -236,9 +241,9 @@ public class Inventory_Manager : MonoBehaviour,InventoryIf,ItemInterface
         }
         //after each loop i goes up then use the reming item slots in the diplayed inventiry and clear them 
         for (int o = 0; o <= Inventory.Items.Count - i; o++)
-            {
+        {
             IPM.itemSlots.transform.GetChild(i + o).GetComponent<Inventory_ItemSlot>().ClearSlot();
-            
+
         }
     }
 
@@ -250,7 +255,7 @@ public class Inventory_Manager : MonoBehaviour,InventoryIf,ItemInterface
         //remove the renderd page
     }
 
-    public void RenderToolTip(InventoryIf.Item item,Vector3 pos)
+    public void RenderToolTip(InventoryIf.Item item, Vector3 pos)
     {
         // need to add a scaling factor so i can have the size of the text box scale with text densit
         // if itemfalour text != null 
@@ -269,7 +274,7 @@ public class Inventory_Manager : MonoBehaviour,InventoryIf,ItemInterface
     /// <param name="item"></param> the item selected
     /// //the inventory it belongs 2
     /// deciper the state/type of the inventory 
-    public void InspectItem(InventoryIf.Item Inventory,Inventory_Page_Manager IMP,Vector2 ItemSlotPos)
+    public void InspectItem(InventoryIf.Item Inventory, Inventory_Page_Manager IMP, Vector2 ItemSlotPos)
     {
         ToolTip.SetActive(false);
         InspectedPage = IMP;
@@ -292,7 +297,7 @@ public class Inventory_Manager : MonoBehaviour,InventoryIf,ItemInterface
         foreach (Inventory_Page_Manager ipm in ItemPage)
         {
             bool stop = false;
-            if ( (ipm.InventoryOpen && ipm != IMP ) && !stop)
+            if ((ipm.InventoryOpen && ipm != IMP) && !stop)
             {
                 // check the state of this inventory and if open
                 singleInv = true;
@@ -313,17 +318,17 @@ public class Inventory_Manager : MonoBehaviour,InventoryIf,ItemInterface
                 }
                 //space
                 //get the inventor that oage owns
-                if (ipm.itemSlots.GetChild(ipm.itemSlots.GetChildCount() - 1).GetComponent<Inventory_ItemSlot>().item != null)
+                if (ipm.itemSlots.GetChild(ipm.itemSlots.childCount - 1).GetComponent<Inventory_ItemSlot>().item != null)
                 {
                     space = true;
                 }
             }
-            
+
         }
         // Debug.Log(singleInv);
-       
+
         //create the bools
-        bool trade;
+        //bool trade;
         bool tradeable = !Inventory.ItemType.notTradeable;
 
 
@@ -334,12 +339,13 @@ public class Inventory_Manager : MonoBehaviour,InventoryIf,ItemInterface
         //caculate the sell prices of buiying
         //just toggle stuff move object 
         InspectMenu.GetComponent<InspectItem>().Open(ItemSlotPos);
-        InspectMenu.GetComponent<InspectItem>().Toggles(inv1,singleInv,inv2,space,inv2,tradeable);
-        InspectMenu.GetComponent<InspectItem>().UpdateFlavourText(Inventory.ItemType.itemFlavourText);
+        InspectMenu.GetComponent<InspectItem>().Toggles(inv1, singleInv, inv2, space, !inv2, tradeable);
+        InspectMenu.GetComponent<InspectItem>().UpdateStuff(Inventory,InspectedPage);
         InspectMenu.GetComponent<InspectItem>().SetBuySellQuantitiys(Inventory.Quantity);
+        //pass the item and invetorypmg
     }
 
-    public void OpenInventory(int Page, string inventoryOwner, InventoryIf.Inventory Inventory)
+    public void OpenInventory(int Page, InventoryIf.Inventory Inventory,GameObject Source)
     {
         //selected the page 
         //get the IMP FROM THE page use that for the gen page scriot
@@ -347,14 +353,15 @@ public class Inventory_Manager : MonoBehaviour,InventoryIf,ItemInterface
         //ItemPage[Page].itemSlots
         
         Inventory_Page_Manager IPM = ItemPage[Page];
-        if (IPM.pageOwner == inventoryOwner && IPM.InventoryOpen == true)
+        IPM.InvSource = Source;
+        if (IPM.pageOwner == Inventory.invName && IPM.InventoryOpen == true)
         {
-            CloseInventory(inventoryOwner);
+            CloseInventory(Inventory.invName);
             return;
         }
         IPM.InventoryOpen = true;
         IPM.gameObject.SetActive(true);
-        GeneratePage(inventoryOwner, Inventory, IPM);
+        GeneratePage(Inventory, IPM,Source);
 
         //updae the inspection pannel unless it override the current pannel
         if (InspectedPage != null && IPM == InspectedPage)
@@ -373,16 +380,16 @@ public class Inventory_Manager : MonoBehaviour,InventoryIf,ItemInterface
     {
         foreach (Inventory_Page_Manager IPM in ItemPage)
         {
-            if (IPM.pageOwner == inventoryOwner)
+            if (IPM.pageOwner == inventoryOwner && IPM != null)
             {
                 IPM.InventoryOpen = false;
                 IPM.gameObject.SetActive(false);
             }
         }
         ToolTip.SetActive(false);
-       // RefreshInspectMenu();
+        // RefreshInspectMenu();
 
-        if ( InspectedPage != null && inventoryOwner == InspectedPage.pageOwner)
+        if (InspectedPage != null && inventoryOwner == InspectedPage.pageOwner)
         {
             InspectMenu.gameObject.SetActive(false);
             Debug.Log("meow");
@@ -394,8 +401,8 @@ public class Inventory_Manager : MonoBehaviour,InventoryIf,ItemInterface
     }
     public void CloseInventoryINT(int Page)
     {
-        ItemPage[Page].InventoryOpen= false;
-        ItemPage[Page].gameObject.SetActive(false);    
+        ItemPage[Page].InventoryOpen = false;
+        ItemPage[Page].gameObject.SetActive(false);
         ToolTip.SetActive(false);
         //refresh.update thee inspection menu 
         if (InspectedPage != null && ItemPage[Page] != InspectedPage)
@@ -416,12 +423,27 @@ public class Inventory_Manager : MonoBehaviour,InventoryIf,ItemInterface
     }
 
     #region TRADING
-    public void Swap(InventoryIf.Inventory reciver, InventoryIf.Inventory giver,InventoryIf.Item item)
+    public void Swap(InventoryIf.Inventory reciver, InventoryIf.Inventory giver, InventoryIf.Item item)
     {
         RemoveItem(giver, item.ItemType, item.Quantity);
         AddItem(reciver, item.ItemType, item.Quantity);
+        Debug.Log("wtf going on");
+    }
+    public void Drop(InventoryIf.Inventory Inventory, InventoryIf.Item item1,Vector2 dropPosition)
+    {
+        RemoveItem(Inventory, item1.ItemType, item1.Quantity);//remove the item from the inventory 
+        //create an item entity on the groyp with the type and quaantity
+        GameObject item = Instantiate(Item_Entity);
+        item.transform.position = dropPosition;
+        item.GetComponent<Item_Entity>().item = item1;
+    }
+
+    InventoryIf.Inventory InventoryIf.returnOwner()
+    {
+        return null;
     }
     #endregion
-
+    //send a single with a string and every invetory has the funcion 
+    // return script or something with this inventory/return the invetory for the stuff
 
 }
