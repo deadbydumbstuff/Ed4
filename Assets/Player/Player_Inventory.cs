@@ -35,7 +35,7 @@ public class Player_Inventory : MonoBehaviour,InventoryIf
         {
             //open da inventory
             //search inventory if contains this item allready if so quanity + 1
-            inventory_Manager.AddItem(inventory, DebugItem, 1 ,Core.name);
+            inventory_Manager.AddItem(inventory, DebugItem, 1);
             
         }
 
@@ -49,12 +49,12 @@ public class Player_Inventory : MonoBehaviour,InventoryIf
     #region Debug_Funcs
     public void Debug_AddItem()
     {
-        inventory_Manager.AddItem(inventory, DebugAntherItem, 1, Core.Name);
+        inventory_Manager.AddItem(inventory, DebugAntherItem, 1);
     }
     public void Debug_RemoveItem()
     {
         if (inventory.Items.Count <= 0) { Debug.Log("no items"); return; }
-        inventory_Manager.RemoveItem(inventory, inventory.Items.Last().ItemType, 1, Core.name);
+        inventory_Manager.RemoveItem(inventory, inventory.Items.Last().ItemType, 1);
     }
     /// <summary>
     /// debugs out an entier inventory

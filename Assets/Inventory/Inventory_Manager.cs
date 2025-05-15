@@ -17,6 +17,7 @@ public interface InventoryIf
     [System.Serializable]
     public class Inventory
     {
+        public string invName;
         public Inventory_Page_Manager.InventoryType InventoryType;
         public List<Item> Items;
     }
@@ -106,7 +107,7 @@ public class Inventory_Manager : MonoBehaviour,InventoryIf,ItemInterface
     /// <summary>
     /// adds an item to an inventory with a quantitys while also creating a new itemspace if its a new item
     /// </summary>
-    public void AddItem(InventoryIf.Inventory Inventory, ItemSObj Item,uint Quantity,string Owner)
+    public void AddItem(InventoryIf.Inventory Inventory, ItemSObj Item,uint Quantity)
     {
         //check the inventory for item
         foreach (InventoryIf.Item item in Inventory.Items)
@@ -114,15 +115,15 @@ public class Inventory_Manager : MonoBehaviour,InventoryIf,ItemInterface
             if (item.ItemType == Item)
             {
                 item.Quantity += Quantity;
-                UpdateInventory(Inventory, Item, Owner);
+                UpdateInventory(Inventory, Item);
                 return;
             }
         }
         Inventory.Items.Add(new InventoryIf.Item { ItemType = Item,Quantity = Quantity});
-        UpdateInventory(Inventory, Item, Owner);
+        UpdateInventory(Inventory, Item);
     }
 
-    public void RemoveItem(InventoryIf.Inventory Inventory, ItemSObj Item, uint Quantity,string Owner)
+    public void RemoveItem(InventoryIf.Inventory Inventory, ItemSObj Item, uint Quantity)
     {
         foreach (InventoryIf.Item item in Inventory.Items)
         {
@@ -133,7 +134,7 @@ public class Inventory_Manager : MonoBehaviour,InventoryIf,ItemInterface
                 {
                     foreach (Inventory_Page_Manager Page in ItemPage)
                     {
-                        if (Page.pageOwner == Owner)
+                        if (Page.pageOwner == Inventory.invName)
                         {
                             int i = Inventory.Items.FindIndex(e => e.ItemType == Item);
                             Page.itemSlots.transform.GetChild(i).GetComponent<Inventory_ItemSlot>().ClearSlot();
@@ -142,19 +143,19 @@ public class Inventory_Manager : MonoBehaviour,InventoryIf,ItemInterface
                     Inventory.Items.Remove(item);
                 }
                 else {
-                    UpdateInventory(Inventory, Item, Owner);
+                    UpdateInventory(Inventory, Item);
                 }
                 break;      
             }
         }
     }
 
-    public void UpdateInventory(InventoryIf.Inventory Inventory, ItemSObj Item,string Owner)
+    public void UpdateInventory(InventoryIf.Inventory Inventory, ItemSObj Item)
     {
         //find item in inventory and the page
         foreach(Inventory_Page_Manager Page in ItemPage)
         {
-            if (Page.pageOwner == Owner && Page.InventoryOpen) //add  check if inventory bool is open 
+            if (Page.pageOwner == Inventory.invName && Page.InventoryOpen) //add  check if inventory bool is open 
             {
                 //this mean their is a open inventory displaying this charcter inventory
                 int i= Inventory.Items.FindIndex(e => e.ItemType == Item);
@@ -417,7 +418,8 @@ public class Inventory_Manager : MonoBehaviour,InventoryIf,ItemInterface
     #region TRADING
     public void Swap(InventoryIf.Inventory reciver, InventoryIf.Inventory giver,InventoryIf.Item item)
     {
-        RemoveItem(giver,item.ItemType,item.Quantity)
+        RemoveItem(giver, item.ItemType, item.Quantity);
+        AddItem(reciver, item.ItemType, item.Quantity);
     }
     #endregion
 
