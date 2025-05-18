@@ -6,6 +6,7 @@ using System.Collections;
 using TMPro;
 using Unity.VisualScripting;
 using static Unity.VisualScripting.Member;
+using static Unity.Burst.Intrinsics.X86.Avx;
 
 public interface InventoryIf
 {
@@ -136,15 +137,25 @@ public class Inventory_Manager : MonoBehaviour, InventoryIf, ItemInterface
                 item.Quantity -= Quantity;
                 if (item.Quantity <= 0)
                 {
+                    List<Inventory_Page_Manager> Ipm = new();
+
                     foreach (Inventory_Page_Manager Page in ItemPage)
                     {
                         if (Page.pageOwner == Inventory.invName)
                         {
                             int i = Inventory.Items.FindIndex(e => e.ItemType == Item);
                             Page.itemSlots.transform.GetChild(i).GetComponent<Inventory_ItemSlot>().ClearSlot();
+                            //GeneratePage(Inventory, Page, Page.InvSource);
+                            Ipm.Add(Page);
                         }
                     }
                     Inventory.Items.Remove(item);
+                    foreach (Inventory_Page_Manager ipm in Ipm)
+                    {
+                        GeneratePage(Inventory, ipm, ipm.InvSource);
+                    }
+                    // Inventory.Items.Remove(item);//refesh the rest of the inventory to update
+
                 }
                 else {
                     UpdateInventory(Inventory, Item);
@@ -159,7 +170,7 @@ public class Inventory_Manager : MonoBehaviour, InventoryIf, ItemInterface
         //find item in inventory and the page
         foreach (Inventory_Page_Manager Page in ItemPage)
         {
-            if (Page.pageOwner == Inventory.invName && Page.InventoryOpen) //add  check if inventory bool is open 
+            if (Page.InventoryOpen && Page.pageOwner == Inventory.invName) //add  check if inventory bool is open 
             {
                 //this mean their is a open inventory displaying this charcter inventory
                 int i = Inventory.Items.FindIndex(e => e.ItemType == Item);
@@ -182,7 +193,10 @@ public class Inventory_Manager : MonoBehaviour, InventoryIf, ItemInterface
                 Page.itemSlots.transform.GetChild(i).GetComponent<Inventory_ItemSlot>().SetItem(Inventory.Items[i]);
                 //go to page with that index vaule and update it with the new vaules
             }
+
+
         }
+
     }
     /// <summary>
     /// returns true or false if an inventory contains a specific item type
@@ -207,9 +221,24 @@ public class Inventory_Manager : MonoBehaviour, InventoryIf, ItemInterface
     /// </summary>
     /// could incule a page owener mechanic :3 
     public void GeneratePage(InventoryIf.Inventory Inventory, Inventory_Page_Manager IPM,GameObject Source)
-
-    {
+     {
         IPM.InvSource = Source;
+
+        //get sauce
+        IPM.GoldDisplay.SetActive(true);
+        if (Source.GetComponent<Player_Core>() != null)
+        {
+            IPM.GoldDisplay.transform.GetChild(0).GetComponent<TMP_Text>().text = ($"Gold : {Source.GetComponent<Player_Core>().Gold}");
+        }
+        else if (Source.GetComponent<Npc_Core>() != null)
+        {
+            IPM.GoldDisplay.transform.GetChild(0).GetComponent<TMP_Text>().text = ($"Gold : {Source.GetComponent<Npc_Core>().Gold}");
+        }
+        else
+        {
+            IPM.GoldDisplay.SetActive(false);
+        }
+
         int i = 0;
         InspectMenu.SetActive(false);
         IPM.UpdatePage(Inventory.invName);
@@ -339,7 +368,7 @@ public class Inventory_Manager : MonoBehaviour, InventoryIf, ItemInterface
         //caculate the sell prices of buiying
         //just toggle stuff move object 
         InspectMenu.GetComponent<InspectItem>().Open(ItemSlotPos);
-        InspectMenu.GetComponent<InspectItem>().Toggles(inv1, singleInv, inv2, space, !inv2, tradeable);
+        InspectMenu.GetComponent<InspectItem>().Toggles(inv1, singleInv, inv2, space, !inv1, tradeable);
         InspectMenu.GetComponent<InspectItem>().UpdateStuff(Inventory,InspectedPage);
         InspectMenu.GetComponent<InspectItem>().SetBuySellQuantitiys(Inventory.Quantity);
         //pass the item and invetorypmg
@@ -427,19 +456,39 @@ public class Inventory_Manager : MonoBehaviour, InventoryIf, ItemInterface
     {
         RemoveItem(giver, item.ItemType, item.Quantity);
         AddItem(reciver, item.ItemType, item.Quantity);
-        Debug.Log("wtf going on");
+        //Debug.Log("wtf going on");
     }
     public void Drop(InventoryIf.Inventory Inventory, InventoryIf.Item item1,Vector2 dropPosition)
     {
-        RemoveItem(Inventory, item1.ItemType, item1.Quantity);//remove the item from the inventory 
         //create an item entity on the groyp with the type and quaantity
         GameObject item = Instantiate(Item_Entity);
         item.transform.position = dropPosition;
-        item.GetComponent<Item_Entity>().item = item1;
+        Debug.Log(item1.Quantity);
+        item.GetComponent<Item_Entity>().item = new InventoryIf.Item { ItemType = item1.ItemType,Quantity = item1.Quantity} ;
+        item.GetComponent<Item_Entity>().SetItem(item1);
+        //item.GetComponent<SpriteRenderer>().sprite = item1.ItemType.itemIcon;
+        RemoveItem(Inventory, item1.ItemType, item1.Quantity);//remove the item from the inventory 
     }
 
     InventoryIf.Inventory InventoryIf.returnOwner()
     {
+        return null;
+    }
+    /// <summary>
+    /// givin a inventory it will return the first open inventory not the given one 
+    /// </summary>
+    /// <returns></returns>
+    public Inventory_Page_Manager returnOtherOpenInventory(Inventory_Page_Manager Ipm)
+    {
+        foreach (Inventory_Page_Manager ipm in ItemPage)
+        {
+            if (ipm.InventoryOpen && ipm != Ipm)
+            {
+                return ipm;
+            }
+        }
+
+
         return null;
     }
     #endregion

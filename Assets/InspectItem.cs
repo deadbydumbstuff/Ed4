@@ -62,7 +62,6 @@ public class InspectItem : MonoBehaviour
     public void Toggles(bool Own, bool Single, bool OwnOther, bool Space,bool Trade,bool TradableItem)
     {
         // opiko'l#;; toggle on and off the spesific settings for each menu 
-        //penis!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         Drop.gameObject.SetActive(false);
         Buy.gameObject.SetActive(false);
         Swap.gameObject.SetActive(false);
@@ -73,7 +72,7 @@ public class InspectItem : MonoBehaviour
             //drop
             Drop.gameObject.SetActive(true);
         }
-        else if(!Trade && TradableItem) //dont own can trade
+        else if(Trade && TradableItem) //dont own can trade
         {
             Buy.gameObject.SetActive(true);
             SliderGobj.gameObject.SetActive(true);
@@ -91,7 +90,7 @@ public class InspectItem : MonoBehaviour
             }
             else 
             { //dont own
-                if (Space && Trade && TradableItem)
+                if (Space && !Trade && TradableItem)
                 {
                     SliderGobj.gameObject.SetActive(true);
                     Sell.gameObject.SetActive(true);
@@ -118,8 +117,8 @@ public class InspectItem : MonoBehaviour
     public void UpdateSliderVaules()
     {
         //update the tex boxed on the slider to show the amount of selected item
-        Buy.transform.GetChild(0).GetComponent<TMP_Text>().text = ($"Buy -- {Slider.value} : Cost");
-        Sell.transform.GetChild(0).GetComponent<TMP_Text>().text = ($"Sell -- {Slider.value} : Quantity");
+        Buy.transform.GetChild(0).GetComponent<TMP_Text>().text = ($"Buy -- {Slider.value} : {inspecteditem.ItemType.baseCost * Slider.value}");
+        Sell.transform.GetChild(0).GetComponent<TMP_Text>().text = ($"Sell -- {Slider.value} : {inspecteditem.ItemType.baseCost * Slider.value}");
     }
 
 
@@ -134,14 +133,76 @@ public class InspectItem : MonoBehaviour
     {
         //GameObject.FindGameObjectWithTag("GlobalManager").GetComponent<Inventory_Manager>().Drop()
         Debug.Log("Click");
-        IM.Drop(inspectPage.InvSource.GetComponent<InventoryIf>().returnOwner(),inspecteditem ,new Vector2 (0, 0));;
+        IM.Drop(inspectPage.InvSource.GetComponent<InventoryIf>().returnOwner(),inspecteditem, GameObject.FindGameObjectWithTag("Player").transform.position);
+        IM.InspectMenu.gameObject.SetActive(false);
     }
-    void SellButton()
+    public void SellButton()
     {
+        if (IM.returnOtherOpenInventory(inspectPage) == null)
+            {
+            IM.InspectMenu.gameObject.SetActive(false);
+            return;
+        }
+        bool npc = NpcTrue(IM.returnOtherOpenInventory(inspectPage).InvSource);
+        float Npcgold = 0;
+        if (npc)
+        {
+             Npcgold = IM.returnOtherOpenInventory(inspectPage).InvSource.GetComponent<Npc_Core>().Gold;
+        }
+        if (npc && Slider.value > 0 && Npcgold >= inspecteditem.ItemType.baseCost * Slider.value) //npc has enough money to buy the item
+        {
+            //IM.Swap(IM.returnOtherOpenInventory(inspectPage).InvSource.GetComponent<InventoryIf>().returnOwner(), inspectPage.InvSource.GetComponent<InventoryIf>().returnOwner(), new InventoryIf.Item { ItemType = inspecteditem.ItemType, Quantity = (uint)Slider.value });
+            GameObject.FindGameObjectWithTag("Player").GetComponent<Player_Core>().Gold += inspecteditem.ItemType.baseCost * Slider.value;
+            if (npc)
+            {
+                IM.returnOtherOpenInventory(inspectPage).InvSource.GetComponent<Npc_Core>().Gold -= inspecteditem.ItemType.baseCost * Slider.value;
+                //give player gold
+                GameObject.FindGameObjectWithTag("Player").GetComponent<Player_Core>().Gold += inspecteditem.ItemType.baseCost * Slider.value;
+            }
+            IM.Swap(IM.returnOtherOpenInventory(inspectPage).InvSource.GetComponent<InventoryIf>().returnOwner(), inspectPage.InvSource.GetComponent<InventoryIf>().returnOwner(), new InventoryIf.Item { ItemType = inspecteditem.ItemType, Quantity = (uint)Slider.value });
+        }
+        UpdateOnClick();
+        if (Slider.maxValue <= 0)
+        {
+            IM.InspectMenu.gameObject.SetActive(false);
+        }
+    }
+    public void BuyButton()
+    {
+        if (Slider.value <= 0) { return; }
+        bool npc = NpcTrue(inspectPage.InvSource);
+        float gold = GameObject.FindGameObjectWithTag("Player").GetComponent<Player_Core>().Gold;
+        if (Slider.value > 0  && gold >= inspecteditem.ItemType.baseCost * Slider.value)
+        {
+            //IM.Swap(GameObject.FindGameObjectWithTag("Player").GetComponent<Player_Inventory>().inventory, inspectPage.InvSource.GetComponent<InventoryIf>().returnOwner(), new InventoryIf.Item { ItemType = inspecteditem.ItemType,Quantity = (uint)Slider.value});
+            if (npc)
+            {
+                GameObject.FindGameObjectWithTag("Player").GetComponent<Player_Core>().Gold -= inspecteditem.ItemType.baseCost * Slider.value;
 
+                inspectPage.InvSource.GetComponent<Npc_Core>().Gold += inspecteditem.ItemType.baseCost * Slider.value;
+            }
+            IM.Swap(GameObject.FindGameObjectWithTag("Player").GetComponent<Player_Inventory>().inventory, inspectPage.InvSource.GetComponent<InventoryIf>().returnOwner(), new InventoryIf.Item { ItemType = inspecteditem.ItemType, Quantity = (uint)Slider.value });
+        }
+        UpdateOnClick();
+        if (Slider.maxValue <= 0)
+        {
+            IM.InspectMenu.gameObject.SetActive(false);
+        }
     }
-    void BuyButton()
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="P"></param> the gold vaule exchanged for this inventory item
+    bool NpcTrue(GameObject Obj)
     {
+        if (Obj.GetComponent<Npc_Core>() != null)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
 
     }
 }

@@ -38,6 +38,7 @@ public class Inventory_ItemSlot : MonoBehaviour,InventoryIf,OnClick
     {
         //remove the item stored in that slot
         //idk how to do this yet tho :£
+        item = null;
         ItemImage.sprite = Empty;
         TextBox.text = ($"");
     }
@@ -48,7 +49,7 @@ public class Inventory_ItemSlot : MonoBehaviour,InventoryIf,OnClick
         Im.HideToolTip();
         Im.InspectMenu.SetActive(false);
         GetComponent<Image>().color = SelectedColour;
-        if (item.Quantity > 0)
+        if (item != null && item.Quantity > 0)
         {
             StopCoroutine(ShowToolTip());
             Im.InspectItem(item, IPM, transform.position);
@@ -77,14 +78,14 @@ public class Inventory_ItemSlot : MonoBehaviour,InventoryIf,OnClick
 
     public void HoverOver()
     {
-        if (item.ItemType != null) { StartCoroutine(ShowToolTip()); }
+        if (item != null && item.ItemType != null) { StartCoroutine(ShowToolTip()); }
     }
 
     IEnumerator ShowToolTip()
     {
         //yeild wait time till show coroutine
         yield return new WaitForSeconds(0.4f);
-        Im.RenderToolTip(item, transform.position);
+        if (item != null && item.ItemType != null) { Im.RenderToolTip(item, transform.position); }
     }
 
     public InventoryIf.Inventory returnOwner()

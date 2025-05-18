@@ -10,6 +10,9 @@ public class Inventory_Page_Manager : MonoBehaviour
     [SerializeField] ScaleWithGridLayout swgl;
     public GameObject InvSource; //store the origins gameobject of the inventory so i can then find component and get back that inventory
     public InventoryType inventoryType;
+
+    public GameObject GoldDisplay;
+
     public enum InventoryType
     {
         PlayerInventory,//full controll of inventory, drop , swap , if other inventory is tradi 

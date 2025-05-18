@@ -15,7 +15,7 @@ MonoBehaviour:
   itemName: 
   itemDescription: potion frame
   itemFlavourText: flavour text
-  baseCost: 0
+  baseCost: 10
   itemIcon: {fileID: -7025713891940003369, guid: a37c91d2adc55fd429a8685e48111239, type: 3}
   type: 0
   ingredient: 0

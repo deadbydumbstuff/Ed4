@@ -5,6 +5,7 @@ using System.Linq;
 public class Player_Inventory : MonoBehaviour, InventoryIf
 {
     [Header("Debug")]
+    [SerializeField] bool DebugOn;
     [SerializeField]KeyCode SpawnItem;
     [SerializeField]ItemSObj DebugItem;
     [SerializeField]ItemSObj DebugAntherItem;
@@ -31,7 +32,7 @@ public class Player_Inventory : MonoBehaviour, InventoryIf
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(SpawnItem))
+        if (DebugOn && Input.GetKeyDown(SpawnItem))
         {
             //open da inventory
             //search inventory if contains this item allready if so quanity + 1

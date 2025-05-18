@@ -8,7 +8,14 @@ using UnityEngine.UIElements;
 public interface NpcPathFinding
 {
     public enum Direction
-    { Left = 0, Right = 1, Up = 2, Down = 3, End = 4}
+    { Left = 0, Right = 1, Up = 2, Down = 3, End = 4 }
+}
+public class HouseHold
+{
+    string HouseName;
+    //list of npcs in the house
+    InventoryIf.Inventory HouseSupplies;// the supplies the npc in the house hold have accese two and can use for their needs
+    GameObject House; //the location and data of their house and what their house contains in a less important sense
 }
 
 public class Npc_MasterScript : MonoBehaviour,NpcPathFinding
@@ -250,5 +257,9 @@ public class Npc_MasterScript : MonoBehaviour,NpcPathFinding
     }
 
 
+    #endregion
+
+    #region Npc-Core
+    //to connect the npcs to a more global system for npc managment such as events and locations interactions and stuff that only need one use
     #endregion
 }
