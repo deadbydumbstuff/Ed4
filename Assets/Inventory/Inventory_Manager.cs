@@ -36,6 +36,7 @@ public interface OnClick
 
 public class Inventory_Manager : MonoBehaviour, InventoryIf, ItemInterface
 {
+    public static Inventory_Manager IMinstace;
     //meowmeow hold item
     public Inventory_ItemSlot selectedItem;//move this to the inventory selected
     //original ItemPos/slot/inventory?????????

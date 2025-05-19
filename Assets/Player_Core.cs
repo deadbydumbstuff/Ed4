@@ -9,6 +9,7 @@ using System.Collections.Generic;
 /// </summary>
 public class Player_Core : MonoBehaviour
 {
+    public static Player_Core instance;
     [Header("Core")]
     public string Name;
     public float Gold;
