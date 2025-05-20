@@ -17,7 +17,7 @@ public class Player_Interaction : MonoBehaviour
     void Update()
     {
         //input .getkeydown(interactionkey)
-        if (Input.GetKeyDown(core.interact) && interactable.Count != 0)  {
+        if (Input.GetKeyDown(core.interact) && interactable.Count > 0)  {
             GameObject interaction = interactable[0];
             foreach (GameObject obj in interactable) {
                 //check distance

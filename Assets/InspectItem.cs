@@ -160,8 +160,8 @@ public class InspectItem : MonoBehaviour
                 GameObject.FindGameObjectWithTag("Player").GetComponent<Player_Core>().Gold += inspecteditem.ItemType.baseCost * Slider.value;
             }
             IM.Swap(IM.returnOtherOpenInventory(inspectPage).InvSource.GetComponent<InventoryIf>().returnOwner(), inspectPage.InvSource.GetComponent<InventoryIf>().returnOwner(), new InventoryIf.Item { ItemType = inspecteditem.ItemType, Quantity = (uint)Slider.value });
+            UpdateOnClick();
         }
-        UpdateOnClick();
         if (Slider.maxValue <= 0)
         {
             IM.InspectMenu.gameObject.SetActive(false);
@@ -182,8 +182,8 @@ public class InspectItem : MonoBehaviour
                 inspectPage.InvSource.GetComponent<Npc_Core>().Gold += inspecteditem.ItemType.baseCost * Slider.value;
             }
             IM.Swap(GameObject.FindGameObjectWithTag("Player").GetComponent<Player_Inventory>().inventory, inspectPage.InvSource.GetComponent<InventoryIf>().returnOwner(), new InventoryIf.Item { ItemType = inspecteditem.ItemType, Quantity = (uint)Slider.value });
+            UpdateOnClick();
         }
-        UpdateOnClick();
         if (Slider.maxValue <= 0)
         {
             IM.InspectMenu.gameObject.SetActive(false);
