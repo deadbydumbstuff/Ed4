@@ -448,7 +448,7 @@ public class Inventory_Manager : MonoBehaviour, InventoryIf, ItemInterface
     void RefreshInspectMenu()
     {
         //check what pages are open and redo it
-        Debug.Log("test");
+        //Debug.Log("test");
         //if inventory is the ond the inspect pannle is on then close the inspec pann
     }
 

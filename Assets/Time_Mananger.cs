@@ -34,7 +34,6 @@ public class Time_Mananger : MonoBehaviour
         set
         {
             minute = value;
-            Debug.Log("min update");
             if (minute >= 60)
             {
                 Hour += 1;
@@ -57,7 +56,6 @@ public class Time_Mananger : MonoBehaviour
         set
         {
             hour = value;
-            Debug.Log("hour update");
             if (hour >= 24)
             {
                 //day end
@@ -67,7 +65,6 @@ public class Time_Mananger : MonoBehaviour
             {
                 if (o.Hour == minute)
                 {
-                    Debug.Log("test");
                     TodayEvents.Remove(o);
                     HoursEvents.Add(o);
 
@@ -82,7 +79,7 @@ public class Time_Mananger : MonoBehaviour
     //public Dictionary<float, TimeBasedEvent> KVP;
     //using a minute and hour timestamp when the hour is selected add the minute to the
 
-    public List<Event> EventQueue; // the global que of all events 
+    public List<Event> EventQueue = new(); // the global que of all events 
     List<Event> TodayEvents = new();//
     List<Event> HoursEvents = new();//
     //todays events 
@@ -183,6 +180,7 @@ public class Time_Mananger : MonoBehaviour
     }
 
     public GameObject Clock;//display the daytime stuff :3
+    public GameObject DateDisplay;
 
     public enum Week
     {
@@ -225,11 +223,15 @@ public class Time_Mananger : MonoBehaviour
         Second += 10 * Time.deltaTime;
         string TruncatedTime = ($"0{Minute}");
         Clock.GetComponent<TMP_Text>().text = $"{Hour} : {TruncatedTime[^2]}{TruncatedTime[^1]}";
+        DateDisplay.GetComponent<TMP_Text>().text = $"{(((int)(CurrentDate.week)) * 7) + (int)CurrentDate.day + 1} : {CurrentDate.day} : {CurrentDate.Season} : {CurrentDate.Year}";
     }
 
 
     public void DayEnd()
     {
+        Debug.Log("End Day");
+
+
         CurrentDate.day += 1;
         if (CurrentDate.day > Week.Sunday)
         {
@@ -247,12 +249,17 @@ public class Time_Mananger : MonoBehaviour
             }
         }
         //check the global events and if they match the date
-        foreach (Event o in EventQueue)
+        if (EventQueue.Count > 0)
         {
-            if (o.date == CurrentDate)
+
+
+            foreach (Event o in EventQueue)
             {
-                EventQueue.Remove(o);
-                TodayEvents.Add(o);
+                if (o.date == CurrentDate)
+                {
+                    EventQueue.Remove(o);
+                    TodayEvents.Add(o);
+                }
             }
         }
 

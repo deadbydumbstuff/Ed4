@@ -16,7 +16,7 @@ public class Npc_EventTest : MonoBehaviour
         public void EventTrigger()
         {
             //throw new System.NotImplementedException();
-            Debug.Log("twekrk");
+            //Debug.Log("twekrk");
         }
     }
 

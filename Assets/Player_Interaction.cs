@@ -41,10 +41,10 @@ public class Player_Interaction : MonoBehaviour
             Interactable[] ie = collision.gameObject.GetComponents<Interactable>();
             //this item is interactable do the on enter function :3
             //open a menu like something
-            Debug.Log("interacabke");
+            //Debug.Log("interacabke");
             foreach (Interactable I in ie)
             {
-                Debug.Log(I);
+                //Debug.Log(I);
                 I.EnterRange(); // shows the propmt to interact
                 interactable.Add(collision.gameObject);
             }

@@ -5,6 +5,7 @@ using System.Linq;
 public class Player_Inventory : MonoBehaviour, InventoryIf
 {
     [Header("Debug")]
+    public static Player_Inventory instance;
     [SerializeField] bool DebugOn;
     [SerializeField]KeyCode SpawnItem;
     [SerializeField]ItemSObj DebugItem;
@@ -26,6 +27,7 @@ public class Player_Inventory : MonoBehaviour, InventoryIf
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        instance = this;
         inventory_Manager.GeneratePage(inventory, inventory_Manager.ItemPage[0],this.gameObject);
     }
 

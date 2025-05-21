@@ -76,6 +76,7 @@ public class InspectItem : MonoBehaviour
         {
             Buy.gameObject.SetActive(true);
             SliderGobj.gameObject.SetActive(true);
+            //check if the inventory is the ply
         }
 
         if (Single) //mutliple inventorys 
@@ -189,6 +190,11 @@ public class InspectItem : MonoBehaviour
             IM.InspectMenu.gameObject.SetActive(false);
         }
     }
+    public void Transfer()
+    {
+        IM.Swap(IM.returnOtherOpenInventory(inspectPage).InvSource.GetComponent<InventoryIf>().returnOwner(), inspectPage.InvSource.GetComponent<InventoryIf>().returnOwner(), new InventoryIf.Item { ItemType = inspecteditem.ItemType, Quantity = inspecteditem.Quantity });
+    }
+
     /// <summary>
     /// 
     /// </summary>

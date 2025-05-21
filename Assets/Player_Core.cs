@@ -30,10 +30,14 @@ public class Player_Core : MonoBehaviour
     public Player_Inventory inventory;
     //s
 
+    [Header("Dialouge")]
+    public KeyCode AdvanceDialouge;
+    //textspeed//font//size//auto scroll
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        instance = this;
     }
 
     // Update is called once per frame
