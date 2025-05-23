@@ -28,7 +28,7 @@ public class NpcBehaviour : MonoBehaviour, NpcPathFinding
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     [Header("Core")]
     public Npc_MasterScript masterScript;
-    Dictionary<Vector2, NpcPathFinding.Direction> Path = new();
+    public Dictionary<Vector2, NpcPathFinding.Direction> Path = new();
 
     [Header("Movement")]
     int i;

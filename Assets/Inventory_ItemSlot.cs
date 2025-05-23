@@ -8,7 +8,7 @@ public class Inventory_ItemSlot : MonoBehaviour,InventoryIf,OnClick
 {
     public InventoryIf ItemRestricions; // only items of these types are allowed
     public Inventory_Manager Im;
-    [SerializeField] Inventory_Page_Manager IPM;
+    public Inventory_Page_Manager IPM;
     [Header("")]
     public InventoryIf.Item item;
     [SerializeField] Image ItemImage;
@@ -16,6 +16,10 @@ public class Inventory_ItemSlot : MonoBehaviour,InventoryIf,OnClick
     [SerializeField] Sprite Empty;
 
     public Color SelectedColour;
+
+    public bool SpecifiedSlot;// if this is true this item slot will only accept one type of item
+    public ItemSObj specItem; // the item type
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {

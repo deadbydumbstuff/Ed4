@@ -18,11 +18,12 @@ public class Temp_Dialouge : MonoBehaviour
 
     private int i;//iteraction of the loop of dialouge we are in
     public string[] currentDialougeSection;
+    public Sprite[] sprites;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     [System.Serializable]
     public class Text
     {
-        public Sprite Image;
+        public Sprite[] Image;
         public string[] messages;
     }
 
@@ -40,6 +41,10 @@ public class Temp_Dialouge : MonoBehaviour
         {
             if (currentDialougeSection != null && i < currentDialougeSection.Length)
             {
+                if (sprites != null && sprites[i] != null)
+                {
+                    Icon.sprite = sprites[i];
+                }
                 textBox.text = currentDialougeSection[i];
                 i++;
             }
@@ -58,11 +63,25 @@ public class Temp_Dialouge : MonoBehaviour
     public void NewDialouge(Text text, OnDiaougeEnd EndEvent)
     {
         i = 1;
-        Icon.sprite = text.Image;
+        if (text.Image != null && text.Image.Length != 0 &&text.Image[0] != null)
+        {
+            Icon.sprite = text.Image[0];
+            sprites = text.Image;
+        }
+        else
+        {
+            sprites = null;
+        }
         ODE = EndEvent;
         currentDialougeSection = text.messages;
         textBox.text = currentDialougeSection[0];
         DiaologeObj.SetActive(true);
+    }
+
+    public void CloseDialouge()
+    {
+        currentDialougeSection = null;
+        DiaologeObj.SetActive(false);
     }
     
 }

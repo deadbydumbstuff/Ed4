@@ -22,6 +22,8 @@ public interface InventoryIf
         public string invName;
         public Inventory_Page_Manager.InventoryType InventoryType;
         public List<Item> Items;
+        public bool LimitedInv;
+        public int InvSize;
     }
 
     public InventoryIf.Inventory returnOwner();
@@ -48,6 +50,11 @@ public class Inventory_Manager : MonoBehaviour, InventoryIf, ItemInterface
     public Inventory_Page_Manager InspectedPage;
     public GameObject itemSlotPrefab;
     public GameObject Item_Entity;
+
+    void Start()
+    {
+        IMinstace = this;
+    }
 
     void Update()
     {
@@ -125,7 +132,24 @@ public class Inventory_Manager : MonoBehaviour, InventoryIf, ItemInterface
                 return;
             }
         }
-        Inventory.Items.Add(new InventoryIf.Item { ItemType = Item, Quantity = Quantity });
+        if (Inventory.LimitedInv)
+        {
+            //
+            if (Inventory.Items.Count >= Inventory.InvSize)
+            {
+                //cant add?
+                //drop the item of the floor
+                Drop(Inventory,new InventoryIf.Item {ItemType = Item, Quantity = Quantity },Player_Core.instance.gameObject.transform.position);
+            }
+            else//their is space
+            {
+                Inventory.Items.Add(new InventoryIf.Item { ItemType = Item, Quantity = Quantity });
+            }
+        }
+        else
+        {
+            Inventory.Items.Add(new InventoryIf.Item { ItemType = Item, Quantity = Quantity });
+        }
         UpdateInventory(Inventory, Item);
     }
 
@@ -191,7 +215,11 @@ public class Inventory_Manager : MonoBehaviour, InventoryIf, ItemInterface
                     //return
                     //}
                 }
-                Page.itemSlots.transform.GetChild(i).GetComponent<Inventory_ItemSlot>().SetItem(Inventory.Items[i]);
+                if (i >= 0)
+                {
+                    Page.itemSlots.transform.GetChild(i).GetComponent<Inventory_ItemSlot>().SetItem(Inventory.Items[i]);
+                }
+
                 //go to page with that index vaule and update it with the new vaules
             }
 
@@ -270,8 +298,10 @@ public class Inventory_Manager : MonoBehaviour, InventoryIf, ItemInterface
             i++;
         }
         //after each loop i goes up then use the reming item slots in the diplayed inventiry and clear them 
+        //if (Inventory.Items.Count < i) { return; }
         for (int o = 0; o <= Inventory.Items.Count - i; o++)
         {
+            if (IPM.itemSlots.transform.childCount <= (i + o)) { return; }
             IPM.itemSlots.transform.GetChild(i + o).GetComponent<Inventory_ItemSlot>().ClearSlot();
 
         }
@@ -397,13 +427,13 @@ public class Inventory_Manager : MonoBehaviour, InventoryIf, ItemInterface
         if (InspectedPage != null && IPM == InspectedPage)
         {
             //overiding the current
-            Debug.Log("ovverride");
+            //Debug.Log("ovverride");
             //hide
         }
         else
         {
             //update the invetory
-            Debug.Log("underride");
+            //Debug.Log("underride");
         }
     }
     public void CloseInventory(string inventoryOwner)
@@ -422,7 +452,7 @@ public class Inventory_Manager : MonoBehaviour, InventoryIf, ItemInterface
         if (InspectedPage != null && inventoryOwner == InspectedPage.pageOwner)
         {
             InspectMenu.gameObject.SetActive(false);
-            Debug.Log("meow");
+            //Debug.Log("meow");
         }
         else
         {

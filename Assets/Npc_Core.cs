@@ -7,6 +7,7 @@ public class Npc_Core : MonoBehaviour
 
     public float Gold;
     public InventoryIf.Inventory Inventory;
+    public NpcBehaviour Behaviour;
 
     public bool Interactable;
     // Start is called once before the first execution of Update after the MonoBehaviour is created

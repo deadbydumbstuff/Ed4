@@ -12,7 +12,7 @@ public interface TimeBasedEvent
 public class Time_Mananger : MonoBehaviour
 {
     public static Time_Mananger instance; //<-- singlton-+
-    public Date CurrentDate = new Date {day = Week.Thursday, week = Month.week2,Season = Season.Autisum,Year = 13}; 
+    public Date CurrentDate = new Date {day = Week.Thursday, week = Month.week2,Season = Season.Autumn,Year = 13}; 
 
     float second;
     public float Second { get { return second; } 
@@ -112,13 +112,13 @@ public class Time_Mananger : MonoBehaviour
        //EventQueue.Add(L);
         if (CurrentDate == Date)
         {
-            Debug.Log("Event is today");
+            //Debug.Log("Event is today");
             if (hour == Hour)
             {
                 if (Min == minute)
                 {
                     //do even
-                    Debug.Log("Event is right now");
+                    //Debug.Log("Event is right now");
                     Event.EventTrigger(); //DO THE EVENT KRONK .............. oh wait this was the right lever good job kronk
                 }
                 else if (Min > minute)
@@ -127,7 +127,7 @@ public class Time_Mananger : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log("Event has passed we missed it");
+                    //Debug.Log("Event has passed we missed it");
                 }
             }
             else if (hour < Hour)
@@ -137,7 +137,7 @@ public class Time_Mananger : MonoBehaviour
             else
             {
                 //eventmissed
-                Debug.Log("Event has passed we missed it");
+               // Debug.Log("Event has passed we missed it");
             }
 
 
@@ -157,7 +157,7 @@ public class Time_Mananger : MonoBehaviour
 
         //check if the event is today/hour/now
     }
-
+   
     bool HasDatePassed(Date date)
     {
         //check year
@@ -205,7 +205,7 @@ public class Time_Mananger : MonoBehaviour
     {
         spring,
         Summer,
-        Autisum,
+        Autumn,
         Winter,
     }
     [System.Serializable]

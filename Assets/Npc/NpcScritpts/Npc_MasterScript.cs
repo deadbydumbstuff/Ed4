@@ -21,6 +21,7 @@ public class HouseHold
 public class Npc_MasterScript : MonoBehaviour,NpcPathFinding
 {
     [Header("Debug Settings")]
+    public static Npc_MasterScript instance;
     [SerializeField]private bool Debuging;
     [SerializeField] GameObject DebugPoint;
     [SerializeField] TileBase TileBase;
@@ -42,7 +43,7 @@ public class Npc_MasterScript : MonoBehaviour,NpcPathFinding
     {
         CreateDiction();
         //Debug.Log((int)TileVaule[TileBase].type);
-
+        instance = this;
         //Debug.Log(GetTileVaule(new Vector2(0,0)));
     }
 
@@ -138,7 +139,7 @@ public class Npc_MasterScript : MonoBehaviour,NpcPathFinding
                 }
                 if (kvp.Value == p && (GetTileVaule(kvp.Key) + HGcost(kvp.Key, Goal)) <= (GetTileVaule(Point) + HGcost(Point, Goal)))
                 {
-                    p = kvp.Value;
+                    p = kvp.Value + (GetTileVaule(kvp.Key));
                     Point = kvp.Key;
                 }
             }

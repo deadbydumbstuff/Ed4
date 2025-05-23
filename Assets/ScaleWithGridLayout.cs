@@ -23,11 +23,16 @@ public class ScaleWithGridLayout : MonoBehaviour
         //if (NotScale) { return; }
         float childCount = Mathf.Floor(transform.childCount / 3);
         //GridLayout.cellSize.x
-        float scale = GridLayout.cellSize.y * childCount;
-        if (scale >= minscale)
+        if (GridLayout != null)
         {
-            RectTransform rt = this.gameObject.GetComponent<RectTransform>();
-            rt.sizeDelta = new Vector2(rt.sizeDelta.x, scale);
+
+
+            float scale = GridLayout.cellSize.y * childCount;
+            if (scale >= minscale)
+            {
+                RectTransform rt = this.gameObject.GetComponent<RectTransform>();
+                rt.sizeDelta = new Vector2(rt.sizeDelta.x, scale);
+            }
         }
         //reset scale to childcount * gridlay scale if grater then 950
         

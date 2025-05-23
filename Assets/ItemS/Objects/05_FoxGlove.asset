@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b1d323144bd541469d114024292e78c, type: 3}
+  m_Name: 05_FoxGlove
+  m_EditorClassIdentifier: 
+  itemName: Fox Glove Flower
+  itemDescription: 'A Flower and Stalk of the FloxGlove Plant '
+  itemFlavourText: Do not lick this Trust me - B.P
+  baseCost: 50
+  itemIcon: {fileID: -4294542403014946171, guid: 909c024c02c516f45a1822c8ba3a5ece, type: 3}
+  type: 0
+  ingredient: 0
+  equiable: 0
+  stackable: 0
+  notTradeable: 0
