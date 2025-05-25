@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: 00_Null
   m_EditorClassIdentifier: 
   itemName: 
-  itemDescription: null item why has this? cheater!
-  itemFlavourText: potion
-  baseCost: 2147483647
-  itemIcon: {fileID: 8995154407686431259, guid: ca9b6f85930f02448b9da40746e12420, type: 3}
-  type: 3
-  ingredient: 1
-  equiable: 1
+  itemDescription: 
+  itemFlavourText: 
+  baseCost: 0
+  itemIcon: {fileID: 0}
+  type: 0
+  ingredient: 0
+  equiable: 0
   stackable: 0
   notTradeable: 0

@@ -50,7 +50,6 @@ public class Player_Movement : MonoBehaviour
         Vector2 dir = new(x, y);
         dir.Normalize();
         rb.linearVelocity += player.Speed * Time.deltaTime * dir;
-        //+= player.Speed * Time.deltaTime * dir;
         SpriteRenderer Sr = transform.GetComponent<SpriteRenderer>();
         //change sprite based on currnt direction
         if (Mathf.Abs(x) > Mathf.Abs(y))

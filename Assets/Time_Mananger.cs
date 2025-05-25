@@ -79,23 +79,15 @@ public class Time_Mananger : MonoBehaviour
     //public Dictionary<float, TimeBasedEvent> KVP;
     //using a minute and hour timestamp when the hour is selected add the minute to the
 
-    public List<Event> EventQueue = new(); // the global que of all events 
-    List<Event> TodayEvents = new();//
-    List<Event> HoursEvents = new();//
-    //todays events 
-           //this hours events
-                //this time = start events
-    //when an event is added 
-
-    // an dictonary of events 
+    public List<Event> EventQueue = new();
+    List<Event> TodayEvents = new();
+    List<Event> HoursEvents = new();
     public class Event 
     {
-        //day/month/year
         public Date date;
-        public float Hour;//8-24
-        public float minite; // 0,10,20,30,40,50
-        public TimeBasedEvent TBE; // the function to run at the end of the 
-        //replace <-- tbe wiht gameobject if i cant just add any interfaceimplamented function
+        public float Hour;
+        public float minite;
+        public TimeBasedEvent TBE;
     }
 
     public void CreateNewEvent(TimeBasedEvent Event, Date Date, float Hour, float Min)

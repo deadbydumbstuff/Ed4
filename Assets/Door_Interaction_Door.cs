@@ -28,12 +28,8 @@ public class Door_Interaction_Door : MonoBehaviour, Interactable
 
     public void Interact()
     {
-        //mamager.Door(this.gameObject,GameObject.FindGameObjectWithTag("Player").transform); // add playuer
         Playerdoor(GameObject.FindGameObjectWithTag("Player").transform);
-        //throw new System.NotImplementedException();
     }
-
-
     void Playerdoor(UnityEngine.Transform transformer)
     {
         Vector3 pos = Exit.GetComponent<Door_Interaction_Door>().doorExit.position;

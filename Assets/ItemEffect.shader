@@ -139,7 +139,7 @@ Shader "Unlit/ItemEffect"
                         glinttype.rgb = main.rgb + ((0.98 - ceil(main.rgb)) * half3(R,B,G));
                         }
 
-                InitializeSurfaceData(main.a, main.a, mask, surfaceData);
+                InitializeSurfaceData(main.rgb, main.a, mask, surfaceData);
                 InitializeInputData(i.uv, i.lightingUV, inputData);
 
                 SETUP_DEBUG_TEXTURE_DATA_2D_NO_TS(inputData, i.positionWS, i.positionCS, _MainTex);

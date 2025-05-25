@@ -79,11 +79,8 @@ public class Inventory_Manager : MonoBehaviour, InventoryIf, ItemInterface
                 if (selectedItem != null)
                 {
                     selectedItem.Deselected();
-                    // InspectMenu.gameObject.SetActive(false);
                 }
                 selectedItem = RR[i].gameObject.GetComponent<OnClick>().OnItemClick();
-                //start the hold timer if the mouse is still down after the timer its a hold else do click stuff
-                //start a timer corotine and if the mouse is still helder after this timere its a hold
                 return;
             }
         }
@@ -289,11 +286,6 @@ public class Inventory_Manager : MonoBehaviour, InventoryIf, ItemInterface
                 {
                     Instantiate(itemSlotPrefab);
                 }
-                else
-                {
-                    //return the item to the floor or something
-                }
-                //set
             }
             i++;
         }
@@ -359,25 +351,17 @@ public class Inventory_Manager : MonoBehaviour, InventoryIf, ItemInterface
             bool stop = false;
             if ((ipm.InventoryOpen && ipm != IMP) && !stop)
             {
-                // check the state of this inventory and if open
                 singleInv = true;
                 stop = true;
-                //idk why i have this  but its to tell what type of inventory;page and what other pages are their i need to add options such as sell/trade/deposit/
                 switch (ipm.inventoryType)
                 {
                     case Inventory_Page_Manager.InventoryType.PlayerInventory:
                         inv2 = true;
-                        // if i own the first one 2 its a swap
-                        //trade
                         break;
                     case Inventory_Page_Manager.InventoryType.Trade:
                         inv2 = false;
-                        //if i own the first one its a trade
-                        //own
                         break;
                 }
-                //space
-                //get the inventor that oage owns
                 if (ipm.itemSlots.GetChild(ipm.itemSlots.childCount - 1).GetComponent<Inventory_ItemSlot>().item != null)
                 {
                     space = true;
@@ -385,19 +369,8 @@ public class Inventory_Manager : MonoBehaviour, InventoryIf, ItemInterface
             }
 
         }
-        // Debug.Log(singleInv);
 
-        //create the bools
-        //bool trade;
         bool tradeable = !Inventory.ItemType.notTradeable;
-
-
-        //depending on the posion of the itemslot/page open  the inspecion pannel on a diffrent side of the screen so its readable
-
-        //toggle on and off options depending on the stuff
-        //pass in the item and the pages that are active onto the 
-        //caculate the sell prices of buiying
-        //just toggle stuff move object 
         InspectMenu.GetComponent<InspectItem>().Open(ItemSlotPos);
         InspectMenu.GetComponent<InspectItem>().Toggles(inv1, singleInv, inv2, space, !inv1, tradeable);
         InspectMenu.GetComponent<InspectItem>().UpdateStuff(Inventory,InspectedPage);

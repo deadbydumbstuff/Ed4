@@ -29,10 +29,6 @@ public class Inventory_ItemSlot : MonoBehaviour,InventoryIf,OnClick
 
     public void SetItem(InventoryIf.Item Item)
     {
-        //set the vaules from the scriptible object 
-        //set itemframe image to item.tiemtype.sprite 
-        //set text to item wquaNITY
-        //OPTIONAL frame is based on item type
         ItemImage.sprite = Item.ItemType.itemIcon;
         TextBox.text = ($"{Item.Quantity}");
         item = Item;
@@ -40,8 +36,7 @@ public class Inventory_ItemSlot : MonoBehaviour,InventoryIf,OnClick
     //dosnt remove items jusst the slot currently being renders  :3
     public void ClearSlot()
     {
-        //remove the item stored in that slot
-        //idk how to do this yet tho :£
+
         item = null;
         ItemImage.sprite = Empty;
         TextBox.text = ($"");
@@ -58,12 +53,6 @@ public class Inventory_ItemSlot : MonoBehaviour,InventoryIf,OnClick
             StopCoroutine(ShowToolTip());
             Im.InspectItem(item, IPM, transform.position);
         }
-        //show the item options
-        //  drop/Buy
-        //  open inspection menu and check what type of inventory it its rn // selling // chest // player inventory // what the other types of inventory are 
-        //  split? create a new slot
-        //  inspec? nah
-        //  darken this item
         return this;
     }
     public void Deselected()

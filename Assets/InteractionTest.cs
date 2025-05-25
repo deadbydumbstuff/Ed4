@@ -29,15 +29,10 @@ public class InteractionTest : MonoBehaviour,Interactable,InventoryIf
        // throw new System.NotImplementedException();
     }
 
-    public void EnterRange() // when the player is close enough to the object //could make this a basic function and polumorhisisit
+    public void EnterRange()
     {
-        //create a popup to show thi ssitem is interactable
-        //edit the sprit to have an outline? shaders?????
-        //track 
-        //inventory.OpenInventory(1, "Chest", InventoryTemp);
         MatProBlk.SetFloat("toggle", 1);
         GetComponent<SpriteRenderer>().SetPropertyBlock(MatProBlk);
-        //Debug.Log("test");
     }
 
     public void ExitRange()

@@ -118,8 +118,7 @@ public class Npc_MasterScript : MonoBehaviour,NpcPathFinding
     {
         StartPos = new Vector2(Mathf.Floor(StartPos.x), Mathf.Floor(StartPos.y));
         Goal = new Vector2(Mathf.Floor(Goal.x), Mathf.Floor(Goal.y));
-        Dictionary<Vector2, int> OpenList = new();  //v2 = pos , int = tilecost + f cost 
-        //create a hashtable of the node and its parent hashtable<vector2,vector2> where ther first one is its noad as each key uqiue and
+        Dictionary<Vector2, int> OpenList = new();
         Dictionary<Vector2,NpcPathFinding.Direction> ParentsList = new();
         HashSet<Vector2> ClosedList = new();
 
@@ -147,7 +146,6 @@ public class Npc_MasterScript : MonoBehaviour,NpcPathFinding
 
             List<Vector2> nabs = new()
             {
-                //get nabs
                 new(Point.x - 1, Point.y),  //left of center
                 new(Point.x + 1, Point.y),  //right of center
                 new(Point.x, Point.y + 1),  //up of center
@@ -198,7 +196,6 @@ public class Npc_MasterScript : MonoBehaviour,NpcPathFinding
             {
                 if (pos == StartPos)
                 {
-                    //ParentsList[pos] = Dir;
                     return ParentsList;
                 }
                 switch (Dir)
@@ -224,11 +221,6 @@ public class Npc_MasterScript : MonoBehaviour,NpcPathFinding
                 ParentsList.TryGetValue(pos, out tempDir);
                 ParentsList[pos] = Dir;
                 Dir = tempDir;
-                //ParentsList
-                //get the pos by following the direction to get its prev  
-                //  get the enum of that pos <-- store this
-                //  replace pos enum with
-                //  
             }
             ParentsList[Goal] = NpcPathFinding.Direction.End;//replace the goal pos with end
         }
